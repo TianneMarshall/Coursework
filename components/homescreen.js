@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button, FlatList, ScrollView } from 'react-native';
+import { Alert, AsyncStorage, Button, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Location from './location';
 
 class Homescreen extends Component {
@@ -7,27 +7,86 @@ class Homescreen extends Component {
     super(props);
 
     this.state = {
-      location: {
-        "location_id": 123,
-        "location_name": "Tianne's Coffee",
-        "location_town": "Manchester",
-        "latitude": 34,
-        "longitude": 12,
-        "photo_path": "hello",
-        "avg_price_rating": 4,
-        "avg_clenliness_rating": 5,
-        "avg_quality_rating": 5
-      }
+      locations: []
     }
+  }
+
+  getLocations = async () => {
+
+    const token = await AsyncStorage.getItem('@session_token');
+
+    return fetch("http://10.0.2.2:3333/api/1.0.0/find",
+    {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': token
+        }
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          locations: responseJson
+        });
+      })
+      .catch((error) => {
+        Alert.alert("Could not load locations")
+        console.error(error);
+      });
+  }
+
+  componentDidMount(){
+    this.getLocations();
   }
 
   render() {
     return (
-      <ScrollView>
-        <Text> homescreen </Text>
-        <Location data={this.state.location} />
-      </ScrollView>
+      <View>
+        <FlatList
+          data={this.state.locations}
+          renderItem={({item}) =>
+              <TouchableOpacity>
+                <View style={styles.location}>
+                  <Text style={{fontSize: 20}}>{item.location_name}</Text>
+                  <Text>{item.location_town}</Text>
+                  <Text> {item.avg_overall_rating} </Text>
+                </View>
+              </TouchableOpacity>
+          }
+          keyExtractor={({location_id}, index) => location_id.toString()}
+        />
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+
+  location: {
+    flex: 1,
+    borderColor: 'blue',
+    borderWidth: 4,
+    margin: 8,
+    padding: 7
+  },
+
+  name: {
+    fontSize: 15,
+    color: 'red'
+  },
+
+  element: {
+    flex: 2
+  },
+
+  field: {
+    borderWidth: 2,
+    borderColor: 'blue'
+  },
+
+  label:{
+    alignItems: 'center'
+  }
+
+})
+
 export default Homescreen;

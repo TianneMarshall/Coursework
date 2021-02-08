@@ -8,6 +8,7 @@ import Homescreen from './components/homescreen';
 import ProfileScreen from './components/profilescreen';
 import SignUpScreen from './components/signupscreen';
 import LoginScreen from './components/loginscreen';
+import LogoutScreen from './components/logoutscreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,10 +22,11 @@ class App extends Component {
     return (
       <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Screen name="Register" component={SignUpScreen} />
-          <Tab.Screen name="Home" component={Homescreen} />
-          <Tab.Screen name="Profile" component={ProfileScreen} />
           <Tab.Screen name="Sign In" component={LoginScreen} />
+          <Tab.Screen name="Home" component={Homescreen} />
+          <Tab.Screen name="Register" component={SignUpScreen} />
+          <Tab.Screen name="Profile" component={ProfileScreen} />
+          <Tab.Screen name="Sign out" component={LogoutScreen} />
         </Tab.Navigator>
       </NavigationContainer>
     );

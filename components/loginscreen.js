@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, StyleSheet, FlatList,  Alert } from 'react-native';
+import { Alert, AsyncStorage, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 
 class LoginScreen extends Component{
 
@@ -12,7 +12,7 @@ class LoginScreen extends Component{
     }
   }
 
-  signin() {
+  signin = async () => {
     return fetch("http://10.0.2.2:3333/api/1.0.0/user/login",
     {
       method: 'POST',
@@ -25,13 +25,17 @@ class LoginScreen extends Component{
     .then((response) => {
       if(response.status == 200) {
         Alert.alert("Signed in");
-        this.props.navigation.navigate('Home');
-      } else{
-        Alert.alert(" error 1 Could not sign in")
+        return response.json()
+      }
+      else{
+        throw 'Error inccorect email/password';
       }
     })
+    .then(async(responseJson) => {
+      await AsyncStorage.setItem('@session_token', responseJson.token);
+      this.props.navigation.navigate('Home');
+    })
     .catch((error) => {
-      Alert.alert("error 2 Could not sign in")
       console.error(error);
     });
   }
