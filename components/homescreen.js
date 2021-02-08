@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, AsyncStorage, Button, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Location from './location';
+import LocationScreen from './locationscreen';
 
 class Homescreen extends Component {
   constructor(props){
@@ -38,13 +39,17 @@ class Homescreen extends Component {
     this.getLocations();
   }
 
+
   render() {
+
+    const navigation = this.props.navigation;
+
     return (
       <View>
         <FlatList
           data={this.state.locations}
           renderItem={({item}) =>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Location')}>
                 <View style={styles.location}>
                   <Text style={{fontSize: 20}}>{item.location_name}</Text>
                   <Text>{item.location_town}</Text>
