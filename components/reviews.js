@@ -1,33 +1,35 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Button, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import Review from './review';
+import { Alert, AsyncStorage, Button, FlatList, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 
 class Reviews extends Component {
 
   constructor(props) {
     super(props);
 
-    this.state = {
-      reviews: {
-          "review_id": 643,
-          "overall_rating": 4,
-          "price_rating": 2,
-          "quality_rating": 3,
-          "clenliness_rating": 5,
-          "review_body": "Great coffee but the bathrooms were smelly"
-        }
-    }
-  }
-
-  getReviews() {
-
   }
 
   render() {
+
+    const review = this.props.reviewData;
+
     return(
       <View>
-        <Text> Reviews </Text>
-        <Review data={this.state.reviews}/>
+        <FlatList
+          data={review}
+          renderItem={({item}) =>
+            <TouchableOpacity>
+              <View style={styles.reviews}>
+                <Text> overall rating: {item.overall_rating} </Text>
+                <Text> Liked by {item.likes} </Text>
+                <Text> {item.review_body} </Text>
+                <Text> quality: {item.quality_rating} </Text>
+                <Text> price: {item.price_rating} </Text>
+                <Text> cleanliness: {item.clenliness_rating} </Text>
+              </View>
+            </TouchableOpacity>
+          }
+          keyExtractor={({review_id}, index) => review_id.toString()}
+        />
       </View>
     );
   }
@@ -37,6 +39,15 @@ class Reviews extends Component {
     inputBox: {
       borderColor: 'blue',
       borderWidth: 4,
+    },
+    title: {
+      color: 'black',
+      fontSize: 20
+    },
+    reviews: {
+      borderColor: 'blue',
+      borderWidth: 2,
+      margin: 6
     }
   });
 
