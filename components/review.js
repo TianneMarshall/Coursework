@@ -13,7 +13,7 @@ class Review extends Component{
 
     return(
       <View>
-        <Text> overall: {this.props.data.overall_rating} </Text>
+        <Text> overall-rating: {review.overall_rating} </Text>
         <Text> {review.review_body} </Text>
         <Text> quality: {review.quality_rating} </Text>
         <Text> price: {review.price_rating} </Text>

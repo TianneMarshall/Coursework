@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, StyleSheet, Alert } from 'react-native';
+import { Alert, AsyncStorage, Button, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import Review from './review';
 
 class Reviews extends Component {
 
@@ -7,39 +8,26 @@ class Reviews extends Component {
     super(props);
 
     this.state = {
-      email: '',
-      password: ''
+      reviews: {
+          "review_id": 643,
+          "overall_rating": 4,
+          "price_rating": 2,
+          "quality_rating": 3,
+          "clenliness_rating": 5,
+          "review_body": "Great coffee but the bathrooms were smelly"
+        }
     }
   }
 
-  getEmail = (email) => {
-    this.setState({email: email})
-  }
+  getReviews() {
 
-  getPassword = (password) => {
-    this.setState({password: password})
-  }
-
-  login = () => {
-    Alert.alert(
-      this.state.email,
-      this.state.password
-    );
   }
 
   render() {
     return(
       <View>
-        <View style={styles.inputBoxes}>
-          <TextInput placeholder="email" onChangeText={this.getEmail} value={this.state.email}/>
-        </View>
-        <View style={styles.inputBoxes}>
-          <TextInput placeholder="password" onChangeText={this.getPassword} value={this.state.password} secureTextEntry={true}/>
-        </View>
-        <Button
-          title="Log in"
-          onPress={this.login}
-        />
+        <Text> Reviews </Text>
+        <Review data={this.state.reviews}/>
       </View>
     );
   }
