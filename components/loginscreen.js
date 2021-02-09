@@ -24,15 +24,19 @@ class LoginScreen extends Component{
     })
     .then((response) => {
       if(response.status == 200) {
-        Alert.alert("Signed in");
         return response.json()
       }
-      else{
-        throw 'Error inccorect email/password';
+      else if(response.status == 400){
+        throw 'Error - incorrect email/password';
+      }
+      else if(response.status == 500) {
+        throw 'Error - please try again later'
       }
     })
     .then(async(responseJson) => {
       await AsyncStorage.setItem('@session_token', responseJson.token);
+      await AsyncStorage.setItem('@user_id', responseJson.id.toString());
+      Alert.alert(responseJson.id.toString(), responseJson.token);
       this.props.navigation.navigate('Home');
     })
     .catch((error) => {
