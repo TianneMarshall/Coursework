@@ -11,9 +11,21 @@ import SignUpScreen from './components/signupscreen';
 import LoginScreen from './components/loginscreen';
 import LogoutScreen from './components/logoutscreen';
 import LocationScreen from './components/locationscreen';
+import EditProfileScreen from './components/editprofilescreen';
+import Reviews from './components/reviews';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const UserStack = createStackNavigator();
+
+function UserNav() {
+  return(
+    <UserStack.Navigator>
+      <UserStack.Screen name="Profile" component={ProfileScreen} />
+      <UserStack.Screen name="EditUser" component={EditProfileScreen} />
+    </UserStack.Navigator>
+  );
+}
 
 function HomeNav() {
   return(
@@ -39,8 +51,9 @@ class App extends Component {
           <Tab.Screen name="Sign In" component={LoginScreen} />
           <Tab.Screen name="Home" component={HomeNav} />
           <Tab.Screen name="Register" component={SignUpScreen} />
-          <Tab.Screen name="Profile" component={ProfileScreen} />
+          <Tab.Screen name="Profile" component={UserNav} />
           <Tab.Screen name="Sign out" component={LogoutScreen} />
+          <Tab.Screen name="Reviews" component={Reviews} />
         </Tab.Navigator>
       </NavigationContainer>
     );
