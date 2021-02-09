@@ -8,7 +8,8 @@ class Homescreen extends Component {
     super(props);
 
     this.state = {
-      locations: []
+      locations: [],
+      locId: ''
     }
   }
 
@@ -49,7 +50,7 @@ class Homescreen extends Component {
         <FlatList
           data={this.state.locations}
           renderItem={({item}) =>
-              <TouchableOpacity onPress={() => navigation.navigate('Location')}>
+              <TouchableOpacity onPress={() => navigation.navigate('Location', {locId: item.location_id})}>
                 <View style={styles.location}>
                   <Text style={{fontSize: 20}}>{item.location_name}</Text>
                   <Text>{item.location_town}</Text>
