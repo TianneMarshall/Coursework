@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, TextInput, View, Button, StyleSheet, FlatList,  Alert } from 'react-native';
-
+import Toast from 'react-native-simple-toast';
 class SignUpScreen extends Component {
   constructor(props) {
     super(props)
@@ -8,15 +8,12 @@ class SignUpScreen extends Component {
       first_name: '',
       last_name: '',
       email: '',
-      password: ''
+      password: '',
+      confirmPassword: ''
     }
   }
 
   registerUser(){
-    if (this.state.password != this.state.confirmPassword) {
-      Alert.alert("Password does not match")
-    }
-    else{
 
       return fetch("http://10.0.2.2:3333/api/1.0.0/user",
       {
@@ -30,13 +27,33 @@ class SignUpScreen extends Component {
         })
       })
       .then((response) => {
-        Alert.alert("Registered");
+        Toast.show('Successfully registered!', Toast.LONG);
         this.props.navigation.navigate('Sign In');
       })
       .catch((error) => {
         Alert.alert("Could not sign up")
         console.error(error);
       });
+    }
+
+  checkValidInput() {
+    if(this.state.first_name == ''){
+      Alert.alert('please enter first name');
+    }
+    else if(this.state.last_name == ''){
+      Alert.alert('please enter last name');
+    }
+    else if(this.state.email == ''){
+      Alert.alert('please enter email');
+    }
+    else if(this.state.password == ''){
+      Alert.alert('please enter password');
+    }
+    else if (this.state.password != this.state.confirmPassword) {
+      Alert.alert("Password does not match, please confirm password")
+    }
+    else{
+      this.registerUser();
     }
   }
 
@@ -98,7 +115,7 @@ class SignUpScreen extends Component {
 
         <Button
           title="Register"
-          onPress={() => this.registerUser()}
+          onPress={() => this.checkValidInput()}
         />
       </View>
     );
