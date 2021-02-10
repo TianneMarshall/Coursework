@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Text, TextInput, View, Button, FlatList, ScrollView } from 'react-native';
+import { Alert, AsyncStorage, Text, TextInput, View, Button, FlatList, ScrollView, StyleSheet } from 'react-native';
 
 class EditProfileScreen extends Component{
   constructor(props){
@@ -40,26 +40,65 @@ class EditProfileScreen extends Component{
     })
   }
 
+  checkChanges(){
+    if(this.state.original_first_name != this.state.updated_first_name){
+
+    }
+    if(this.state.original_first_name != this.state.updated_first_name){
+
+    }
+    if(this.state.original_first_name != this.state.updated_first_name){
+
+    }
+  }
+
   componentDidMount() {
     this.getOriginalData();
   }
 
   render() {
     return(
-      <View>
-        <Text> Edit Profile </Text>
-        <TextInput
-          defaultValue={this.state.original_first_name}
-        />
-        <TextInput
-          defaultValue={this.state.original_last_name}
-        />
-        <TextInput
-          defaultValue={this.state.original_email}
-        />
+      <View style={styles.screen}>
+        <TextInput style={styles.titles} defaultValue="Edit Profile" editable={false}/>
+        <View>
+          <TextInput style={styles.textBox}
+            defaultValue={this.state.original_first_name}
+            onChangeText={(updated_first_name) => this.setState({updated_first_name})}
+          />
+          <TextInput style={styles.textBox}
+            defaultValue={this.state.original_last_name}
+            onChangeText={(updated_last_name) => this.setState({updated_last_name})}
+          />
+          <TextInput style={styles.textBox}
+            defaultValue={this.state.original_email}
+            onChangeText={(updated_email) => this.setState({updated_email})}
+          />
+        </View>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+
+  screen: {
+    flex: 1,
+    alignItems: 'center',
+  },
+
+  titles: {
+    fontSize: 20,
+    color: 'black'
+  },
+
+  textBox: {
+    width: 300,
+    borderColor: 'blue',
+    borderWidth: 2,
+    margin: 4,
+    textAlign: 'center'
+  }
+
+})
 
 export default EditProfileScreen;
