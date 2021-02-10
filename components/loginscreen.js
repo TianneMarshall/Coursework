@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, AsyncStorage, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
-
+import Toast from 'react-native-simple-toast';
+import {Icon} from 'react-native-vector-icons';
 class LoginScreen extends Component{
 
   constructor(props){
@@ -24,6 +25,7 @@ class LoginScreen extends Component{
     })
     .then((response) => {
       if(response.status == 200) {
+        Toast.show('Successfuly signed in!', Toast.LONG);
         return response.json()
       }
       else if(response.status == 400){
@@ -36,7 +38,6 @@ class LoginScreen extends Component{
     .then(async(responseJson) => {
       await AsyncStorage.setItem('@session_token', responseJson.token);
       await AsyncStorage.setItem('@user_id', responseJson.id.toString());
-      Alert.alert(responseJson.id.toString(), responseJson.token);
       this.props.navigation.navigate('Home');
     })
     .catch((error) => {
