@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Text, View, Button, FlatList, ScrollView } from 'react-native';
+import { Alert, Text, View, Button, FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import User from './user';
+import Reviews from './reviews';
+import MyReviews from './myReviews';
+import Location from './location';
+import LocationScreen from './locationscreen';
+import { useIsFocused } from '@react-navigation/native'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class ProfileScreen extends Component {
   constructor(props){
     super(props);
 
     this.state = {
-      first_name: '',
-      last_name: '',
-      email: '',
+      user: '',
       favourite_locations: [],
       reviews: [],
       liked_reviews: []
@@ -30,9 +36,10 @@ class ProfileScreen extends Component {
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({
-        first_name: responseJson.first_name,
-        last_name: responseJson.last_name,
-        email: responseJson.email
+        user: responseJson,
+        reviews: responseJson.reviews,
+        favourite_locations: responseJson.favourite_locations,
+        liked_reviews: responseJson.liked_reviews
       });
     })
     .catch((error) => {
@@ -50,16 +57,73 @@ class ProfileScreen extends Component {
 
     return (
       <View>
-        <Text> {this.state.first_name} </Text>
-        <Text> {this.state.last_name} </Text>
-        <Text> {this.state.email} </Text>
-        <Button
-          title="Edit Profile"
-          onPress={() => navigation.navigate('EditUser', {first_name: this.state.first_name}, {last_name: this.state.last_name}, {email: this.state.email})}
-        />
+        <ScrollView>
+          <User userData={this.state.user} />
+
+          <Button
+            title="Edit Profile"
+            onPress={() => navigation.navigate('EditUser', {userData: this.state.user})}
+          />
+
+          <TextInput
+            style={styles.title}
+            defaultValue="Reviews"
+            editable={false}
+          />
+          <MyReviews reviewData={this.state.reviews} />
+
+          <TextInput
+            style={styles.title}
+            defaultValue="Liked Reviews"
+            editable={false}
+          />
+          <Reviews reviewData={this.state.liked_reviews}/>
+
+          <TextInput
+            style={styles.title}
+            defaultValue="Favourite Locations"
+            editable={false}
+          />
+
+            <FlatList
+              data={this.state.favourite_locations}
+              renderItem={({item}) =>
+              <View>
+                <TouchableOpacity onPress={() => navigation.navigate('LocationScreen', {locId: item.location_id})}>
+                  <Icon
+                    name='heart'
+                    color= 'red'
+                    size={60}
+                  />
+                  <Text style={{fontSize: 20}}> {item.location_name}</Text>
+                  <Text> {item.location_town}</Text>
+                  <Text> average rating: {item.avg_overall_rating} </Text>
+                </TouchableOpacity>
+              </View>
+              }
+              keyExtractor={({location_id}, index) => location_id.toString()}
+            />
+
+        </ScrollView>
       </View>
 
     );
   }
 }
+
+const styles=StyleSheet.create({
+  title: {
+    color: 'black',
+    fontSize: 20
+  },
+
+  item: {
+    borderColor: 'blue',
+    borderWidth: 3
+  },
+
+  button: {
+    marginTop: 6
+  }
+})
 export default ProfileScreen;

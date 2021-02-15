@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, TextInput, View, Button, StyleSheet, FlatList,  Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
 class SignUpScreen extends Component {
   constructor(props) {

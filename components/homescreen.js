@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Button, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import Location from './location';
+import { Alert, Button, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import LocationScreen from './locationscreen';
 
 class Homescreen extends Component {
@@ -9,7 +10,7 @@ class Homescreen extends Component {
 
     this.state = {
       locations: [],
-      locId: ''
+      locId: '',
     }
   }
 
@@ -50,7 +51,7 @@ class Homescreen extends Component {
         <FlatList
           data={this.state.locations}
           renderItem={({item}) =>
-              <TouchableOpacity onPress={() => navigation.navigate('Location', {locId: item.location_id})}>
+              <TouchableOpacity onPress={() => navigation.navigate('LocationScreen', {locId: item.location_id})}>
                 <View style={styles.location}>
                   <Text style={{fontSize: 20}}>{item.location_name}</Text>
                   <Text>{item.location_town}</Text>

@@ -1,5 +1,8 @@
 import React, { Component} from 'react';
-import { Text, View, Button, FlatList } from 'react-native';
+import { Text, TextInput, View, Button, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 class User extends Component{
 
@@ -9,16 +12,53 @@ class User extends Component{
 
   render(){
 
-    const user = this.props.data;
+    const user = this.props.userData;
 
     return(
-      <View>
-        <Text> fname </Text>
-        <Text> lname </Text>
-        <Text> picture </Text>
-        <Text> email </Text>
-      <View>
+      <View style={styles.screen}>
+        <Icon
+          style={styles.image}
+          name='user-circle'
+          size={60}
+        />
+        <View style={styles.names}>
+          <TextInput
+            style={styles.name}
+            defaultValue={user.first_name}
+            editable={false}>
+          </TextInput>
+
+          <TextInput
+            style={styles.name}
+            defaultValue={user.last_name}
+            editable={false}>
+          </TextInput>
+        </View>
+        <Text> {user.email} </Text>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    alignItems: 'center',
+    marginBottom: 20
+  },
+  image: {
+    alignItems: 'center',
+    marginTop: 20,
+    color: 'blue'
+  },
+  name: {
+    color: 'black',
+    fontSize: 30
+  },
+  names: {
+    flexDirection: 'row'
+  }
+
+})
+
 export default User;

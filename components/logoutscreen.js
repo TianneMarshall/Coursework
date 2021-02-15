@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class LogoutScreen extends Component{
 

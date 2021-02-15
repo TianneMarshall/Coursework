@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
-import {Icon} from 'react-native-vector-icons';
+
 class LoginScreen extends Component{
 
   constructor(props){
@@ -46,6 +47,9 @@ class LoginScreen extends Component{
   }
 
   render() {
+
+        const navigation = this.props.navigation;
+
     return(
       <View style={styles.form}>
           <TextInput style={styles.field}
@@ -59,10 +63,20 @@ class LoginScreen extends Component{
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
           />
-          <Button style={styles.signButton}
+
+          <View style={styles.signInButton}>
+          <Button
             title="Sign in"
             onPress={() => this.signin()}
           />
+          </View>
+
+          <View style={styles.signUpButton} >
+            <Button
+              title="Sign Up"
+              onPress={() => navigation.navigate('Register')}
+            />
+          </View>
       </View>
     );
   }
@@ -90,8 +104,12 @@ const styles = StyleSheet.create({
     margin: 20
   },
 
-  signButton:{
-    padding: 20
+  signInButton:{
+    padding: 30
+  },
+
+  signUpButton:{
+    padding: 30
   }
 
 })
