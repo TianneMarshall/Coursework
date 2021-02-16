@@ -95,6 +95,9 @@ class EditProfileScreen extends Component{
             size={60}
           />
 
+
+          <Text> Edit Profile </Text>
+
           <TextInput style={styles.textBox}
             defaultValue={this.state.original_first_name}
             onChangeText={(updated_first_name) => this.setState({updated_first_name})}

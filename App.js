@@ -14,9 +14,7 @@ import LoginScreen from './components/loginscreen';
 import LogoutScreen from './components/logoutscreen';
 import LocationScreen from './components/locationscreen';
 import EditProfileScreen from './components/editprofilescreen';
-import Reviews from './components/reviews';
 import WriteReviewScreen from './components/writeReviewScreen';
-import Practice from './components/practice';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
