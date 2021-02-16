@@ -129,12 +129,13 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.coursework1"
+        missingDimensionStrategy 'react-native-camera', 'general'
+        applicationId "com.coursework2"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
 
     }
     splits {

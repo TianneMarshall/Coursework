@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "Coursework1-tvOS.app"
-               BlueprintName = "Coursework1-tvOS"
-               ReferencedContainer = "container:Coursework1.xcodeproj">
+               BuildableName = "Coursework2-tvOS.app"
+               BlueprintName = "Coursework2-tvOS"
+               ReferencedContainer = "container:Coursework2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "Coursework1-tvOSTests.xctest"
-               BlueprintName = "Coursework1-tvOSTests"
-               ReferencedContainer = "container:Coursework1.xcodeproj">
+               BuildableName = "Coursework2-tvOSTests.xctest"
+               BlueprintName = "Coursework2-tvOSTests"
+               ReferencedContainer = "container:Coursework2.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "Coursework1-tvOS.app"
-            BlueprintName = "Coursework1-tvOS"
-            ReferencedContainer = "container:Coursework1.xcodeproj">
+            BuildableName = "Coursework2-tvOS.app"
+            BlueprintName = "Coursework2-tvOS"
+            ReferencedContainer = "container:Coursework2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "Coursework1-tvOS.app"
-            BlueprintName = "Coursework1-tvOS"
-            ReferencedContainer = "container:Coursework1.xcodeproj">
+            BuildableName = "Coursework2-tvOS.app"
+            BlueprintName = "Coursework2-tvOS"
+            ReferencedContainer = "container:Coursework2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

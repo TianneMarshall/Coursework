@@ -3,12 +3,14 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
-target 'Coursework1' do
+target 'Coursework2' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
 
-  target 'Coursework1Tests' do
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
+  target 'Coursework2Tests' do
     inherit! :complete
     # Pods for testing
   end
@@ -23,10 +25,10 @@ target 'Coursework1' do
   end
 end
 
-target 'Coursework1-tvOS' do
-  # Pods for Coursework1-tvOS
+target 'Coursework2-tvOS' do
+  # Pods for Coursework2-tvOS
 
-  target 'Coursework1-tvOSTests' do
+  target 'Coursework2-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
