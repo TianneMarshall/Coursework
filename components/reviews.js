@@ -1,40 +1,27 @@
-import React, { Component } from 'react';
-import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Toast from 'react-native-simple-toast';
-
+import React from 'react';
+import { FlatList, View } from 'react-native';
+import PropTypes from 'prop-types';
 import Review from './review';
 
-class Reviews extends Component {
+function Reviews (props) {
 
-  constructor(props) {
-    super(props);
+  const review = props.reviewData;
 
-    this.state={
-      rev_id: '',
-      liked: false,
-      thumb: 'thumbs-o-up'
-    }
+  return(
+    <View>
+      <FlatList
+        data={review}
+        renderItem={({item}) =>
 
-  }
+          <Review reviewData={item.review} reviewLocId={item.location.location_id}/>
+        }
+      />
+    </View>
+  );
+}
 
-  render() {
-
-    const review = this.props.reviewData;
-
-    return(
-      <View>
-        <FlatList
-          data={review}
-          renderItem={({item}) =>
-
-            <Review reviewData={item.review} reviewLocId={item.location.location_id}/>
-          }
-        />
-      </View>
-    );
-  }
+Reviews.propTypes = {
+  reviewData: PropTypes.instanceOf(Object).isRequired
 }
 
 export default Reviews;

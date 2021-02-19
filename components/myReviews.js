@@ -1,9 +1,11 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { Button, FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-simple-toast';
 import { RNCamera } from 'react-native-camera';
+import PropTypes from 'prop-types';
 
 import Review from './review';
 
@@ -22,7 +24,7 @@ class MyReviews extends Component {
     const location_id = this.state.location_id.toString();
     const review_id = this.state.review_id.toString();
 
-    return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + location_id + "/review/" + review_id,
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  location_id  }/review/${  review_id}`,
     {
       method: 'DELETE',
       headers: {
@@ -31,30 +33,29 @@ class MyReviews extends Component {
       }
     })
     .then((response) => {
-      if(response.status == 200) {
+      if(response.status === 200) {
         Toast.show('Review Deleted!');
       }
-      else if(response.status == 400) {
-        throw 'Bad Request - Invalid delete request';
+      else if(response.status === 400) {
+        console.error("Bad Request - Invalid delete request");
       }
-      else if(response.status == 401) {
-        throw 'Unauthorised - Can not delete review';
+      else if(response.status === 401) {
+        console.error("Unauthorised - Can not delete review");
       }
-      else if(response.status == 403) {
-        throw 'Forbidden - Not your review';
+      else if(response.status === 403) {
+        console.error("Forbidden - Not your review");
       }
-      else if(response.status == 404){
-        throw 'Can not find review';
+      else if(response.status === 404){
+        console.error("Can not find review");
       }
       else {
-        throw "Failed";
+        console.error("Failed");
       }
     })
     .catch((error) => {
       console.error(error);
     })
   }
-
 
   takePicture = async() => {
     const token = await AsyncStorage.getItem('@session_token');
@@ -66,37 +67,37 @@ class MyReviews extends Component {
       const data = await this.camera.takePictureAsync(options);
 
       console.log(data.uri, token);
-    }
 
-    return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + location_id + "/review/" + review_id + "/photo",
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'image/jpeg',
-        'X-Authorization': token
-      },
-      body: data
-    })
-    .then((response) => {
-      if(response.status == 200){
-        Toast.show("Photo Taken!");
-      }
-      else if(response.status == 400) {
-        throw "Error bad request";
-      }
-      else if(response.status == 401) {
-        throw "Error Unauthorised";
-      }
-      else if(response.status == 404) {
-        throw "Error not found";
-      }
-      else if(response.status == 500) {
-        throw "Error Failed";
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    })
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  location_id  }/review/${  review_id  }/photo`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'image/jpeg',
+          'X-Authorization': token
+        },
+        body: data
+      })
+      .then((response) => {
+        if(response.status === 200){
+          Toast.show("Photo Taken!");
+        }
+        else if(response.status === 400) {
+          console.error("Error bad request");
+        }
+        else if(response.status === 401) {
+          console.error("Error Unauthorised");
+        }
+        else if(response.status === 404) {
+          console.error("Error not found");
+        }
+        else if(response.status === 500) {
+          console.error("Error Failed");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+    }
   }
 
   render() {
@@ -154,5 +155,9 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
+
+MyReviews.propTypes = {
+  reviewData: PropTypes.instanceOf(Object).isRequired
+}
 
 export default MyReviews;

@@ -1,18 +1,11 @@
-import React, { Component} from 'react';
-import { Text, TextInput, View, Button, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
+import { Text, TextInput, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import PropTypes from 'prop-types';
 
+function User (props) {
 
-class User extends Component{
-
-  constructor(props){
-    super(props);
-  }
-
-  render(){
-
-    const user = this.props.userData;
+    const user = props.userData;
 
     return(
       <View style={styles.screen}>
@@ -25,19 +18,16 @@ class User extends Component{
           <TextInput
             style={styles.name}
             defaultValue={user.first_name}
-            editable={false}>
-          </TextInput>
+            editable={false} />
 
           <TextInput
             style={styles.name}
             defaultValue={user.last_name}
-            editable={false}>
-          </TextInput>
+            editable={false} />
         </View>
         <Text> {user.email} </Text>
       </View>
     );
-  }
 }
 
 const styles = StyleSheet.create({
@@ -60,5 +50,9 @@ const styles = StyleSheet.create({
   }
 
 })
+
+User.propTypes = {
+  userData: PropTypes.instanceOf(Object).isRequired
+}
 
 export default User;

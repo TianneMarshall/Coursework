@@ -1,8 +1,8 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Alert, Button, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import LocationScreen from './locationscreen';
+import PropTypes from 'prop-types';
 
 class Homescreen extends Component {
   constructor(props){
@@ -10,8 +10,11 @@ class Homescreen extends Component {
 
     this.state = {
       locations: [],
-      locId: '',
     }
+  }
+
+  componentDidMount(){
+    this.getLocations();
   }
 
   getLocations = async () => {
@@ -37,11 +40,6 @@ class Homescreen extends Component {
       });
   }
 
-  componentDidMount(){
-    this.getLocations();
-  }
-
-
   render() {
 
     const navigation = this.props.navigation;
@@ -59,7 +57,7 @@ class Homescreen extends Component {
                 </View>
               </TouchableOpacity>
           }
-          keyExtractor={({location_id}, index) => location_id.toString()}
+          keyExtractor={({location_id}) => location_id.toString()}
         />
       </View>
     );
@@ -95,5 +93,11 @@ const styles = StyleSheet.create({
   }
 
 })
+
+Homescreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
+}
 
 export default Homescreen;

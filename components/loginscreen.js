@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, StyleSheet, TextInput, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
+import PropTypes from 'prop-types';
 
 class LoginScreen extends Component{
 
@@ -25,21 +26,24 @@ class LoginScreen extends Component{
       })
     })
     .then((response) => {
-      if(response.status == 200) {
-        Toast.show('Successfuly signed in!', Toast.LONG);
+      if(response.status === 200) {
+        Toast.show("Successfully signed in!", Toast.LONG);
         return response.json()
       }
-      else if(response.status == 400){
-        throw 'Error - incorrect email/password';
+      if(response.status === 400){
+        console.error("Error - incorrect email/password");
       }
-      else if(response.status == 500) {
-        throw 'Error - please try again later'
+      else if(response.status === 500) {
+        console.error("Error - please try again later");
+      }
+      else{
+        console.error("Failed")
       }
     })
     .then(async(responseJson) => {
       await AsyncStorage.setItem('@session_token', responseJson.token);
       await AsyncStorage.setItem('@user_id', responseJson.id.toString());
-      this.props.navigation.navigate('Home');
+      this.props.navigation.navigate("Home");
     })
     .catch((error) => {
       console.error(error);
@@ -48,7 +52,7 @@ class LoginScreen extends Component{
 
   render() {
 
-        const navigation = this.props.navigation;
+    const navigation = this.props.navigation;
 
     return(
       <View style={styles.form}>
@@ -59,7 +63,7 @@ class LoginScreen extends Component{
           />
           <TextInput style={styles.field}
             placeholder="enter password.."
-            secureTextEntry={true}
+            secureTextEntry
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
           />
@@ -113,5 +117,11 @@ const styles = StyleSheet.create({
   }
 
 })
+
+LoginScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
+}
 
 export default LoginScreen;

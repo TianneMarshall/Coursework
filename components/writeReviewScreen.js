@@ -1,10 +1,10 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Alert, Button, FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-simple-toast';
 import { AirbnbRating } from 'react-native-ratings';
-import Stars from 'react-native-stars';
+import PropTypes from 'prop-types';
 
 class WriteReviewScreen extends Component {
   constructor(props){
@@ -24,7 +24,7 @@ class WriteReviewScreen extends Component {
     const location_id = this.props.route.params.locId;
     const token = await AsyncStorage.getItem('@session_token');
 
-    return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + location_id + "/review",
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  location_id  }/review`,
     {
         method: 'POST',
         headers: {
@@ -40,20 +40,20 @@ class WriteReviewScreen extends Component {
         })
     })
     .then((response) => {
-      if(response.status == 201) {
+      if(response.status === 201) {
         Toast.show("Posted review!");
       }
-      else if(response.status == 400) {
-        throw "Error invalid review";
+      else if(response.status === 400) {
+        console.error("Error invalid review");
       }
-      else if(response.status == 401) {
-        throw "Error cannot post review"
+      else if(response.status === 401) {
+        console.error("Error cannot post review");
       }
-      else if(response.status == 404) {
-        throw "Error cannot find location"
+      else if(response.status === 404) {
+        console.error("Error cannot find location");
       }
       else {
-        throw "Error failed"
+        console.error("Error failed");
       }
     })
     .catch((error) => {
@@ -94,8 +94,7 @@ class WriteReviewScreen extends Component {
               defaultRating={0}
               reviews=''
               size={30}
-              onFinishRating={(quality_rating) => this.setState({quality_rating: quality_rating})}>
-            </AirbnbRating>
+              onFinishRating={(quality_rating) => this.setState({quality_rating})} />
           </View>
 
 
@@ -111,8 +110,7 @@ class WriteReviewScreen extends Component {
               defaultRating={0}
               reviews=''
               size={30}
-              onFinishRating={(price_rating) => this.setState({price_rating: price_rating})}>
-            </AirbnbRating>
+              onFinishRating={(price_rating) => this.setState({price_rating})} />
           </View>
 
 
@@ -128,8 +126,7 @@ class WriteReviewScreen extends Component {
               defaultRating={0}
               reviews=''
               size={30}
-              onFinishRating={(clenliness_rating) => this.setState({clenliness_rating: clenliness_rating})}>
-            </AirbnbRating>
+              onFinishRating={(clenliness_rating) => this.setState({clenliness_rating})} />
           </View>
 
 
@@ -144,15 +141,14 @@ class WriteReviewScreen extends Component {
             defaultRating={0}
             reviews=''
             size={30}
-            onFinishRating={(overall_rating) => this.setState({overall_rating: overall_rating})}>
-          </AirbnbRating>
+            onFinishRating={(overall_rating) => this.setState({overall_rating})} />
         </View>
 
 
         <TextInput
           style={styles.revBody}
           placeholder="write review body"
-          onChangeText={(review_body) => this.setState({review_body: review_body})}
+          onChangeText={(review_body) => this.setState({review_body})}
           value={this.state.review_body}
         />
 
@@ -188,5 +184,9 @@ const styles = StyleSheet.create({
     borderWidth: 3
   }
 })
+
+WriteReviewScreen.propTypes = {
+  route: PropTypes.instanceOf(Object).isRequired
+}
 
 export default WriteReviewScreen;

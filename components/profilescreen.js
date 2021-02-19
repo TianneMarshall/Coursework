@@ -1,24 +1,27 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Alert, Text, View, Button, FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, Button, FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import PropTypes from 'prop-types';
 import User from './user';
 import Reviews from './reviews';
 import MyReviews from './myReviews';
-import Location from './location';
-import LocationScreen from './locationscreen';
-import { useIsFocused } from '@react-navigation/native'
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 class ProfileScreen extends Component {
   constructor(props){
     super(props);
 
     this.state = {
-      user: '',
+      user: [],
       favourite_locations: [],
       reviews: [],
       liked_reviews: []
     }
+  }
+
+  componentDidMount() {
+    this.getUser();
   }
 
   getUser = async () => {
@@ -26,7 +29,7 @@ class ProfileScreen extends Component {
     const userid = await AsyncStorage.getItem('@user_id');
     const token = await AsyncStorage.getItem('@session_token');
 
-    return fetch("http://10.0.2.2:3333/api/1.0.0/user/"+userid,
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/user/${userid}`,
     {
         headers: {
           'Content-Type': 'application/json',
@@ -45,10 +48,6 @@ class ProfileScreen extends Component {
     .catch((error) => {
       console.error(error);
     });
-  }
-
-  componentDidMount() {
-    this.getUser();
   }
 
   render() {
@@ -101,7 +100,7 @@ class ProfileScreen extends Component {
                 </TouchableOpacity>
               </View>
               }
-              keyExtractor={({location_id}, index) => location_id.toString()}
+              keyExtractor={({location_id}) => location_id.toString()}
             />
 
         </ScrollView>
@@ -126,4 +125,12 @@ const styles=StyleSheet.create({
     marginTop: 6
   }
 })
+
+
+ProfileScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
+}
+
 export default ProfileScreen;

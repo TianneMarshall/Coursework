@@ -1,9 +1,10 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-simple-toast';
-import Stars from 'react-native-stars';
+import PropTypes from 'prop-types';
 
 import Ratings from './ratings';
 
@@ -16,18 +17,6 @@ class Review extends Component {
     }
   }
 
-  checkLike(){
-    if(this.state.liked == false) {
-      this.like();
-      this.setState({thumb: "thumbs-up"});
-
-    }
-    else if(this.state.liked == true){
-      this.unlike();
-      this.setState({thumb: "thumbs-o-up"});
-    }
-  }
-
   like = async () => {
 
       const token = await AsyncStorage.getItem('@session_token');
@@ -35,7 +24,7 @@ class Review extends Component {
       const loc_id = this.props.reviewLocId.toString();
       const rev_id = review.review_id.toString();
 
-      return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + loc_id + "/review/" + rev_id + "/like",
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  loc_id  }/review/${  rev_id  }/like`,
       {
         method: 'POST',
         headers: {
@@ -44,20 +33,20 @@ class Review extends Component {
         }
       })
       .then((response) => {
-        if(response.status == 200){
+        if(response.status === 200){
           this.setState({
             liked: true
           });
-          Toast.show('Liked!', Toast.LONG);
+          Toast.show('Liked!');
         }
-        else if(response.status == 401) {
-          throw "Could not like";
+        else if(response.status === 401) {
+          console.error("Could not like");
         }
-        else if(response.status == 404) {
-          throw "Could not get review";
+        else if(response.status === 404) {
+          console.error("Could not get review");
         }
         else{
-          throw "Error";
+          console.error("Error");
         }
       })
       .catch((error) => {
@@ -72,7 +61,7 @@ class Review extends Component {
     const loc_id = this.props.reviewLocId.toString();
     const rev_id = review.review_id.toString();
 
-      return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + loc_id + "/review/" + rev_id + "/like",
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  loc_id  }/review/${  rev_id  }/like`,
       {
         method: 'DELETE',
         headers: {
@@ -81,20 +70,20 @@ class Review extends Component {
         }
       })
       .then((response) => {
-        if(response.status == 200){
+        if(response.status === 200){
           this.setState({
             liked: false
           });
           Toast.show('Unliked!', Toast.LONG);
         }
-        else if(response.status == 401) {
-          throw "Could not unlike";
+        else if(response.status === 401) {
+          console.error("Could not unlike");
         }
-        else if(response.status == 404) {
-          throw "Could not get review";
+        else if(response.status === 404) {
+          console.error("Could not get review");
         }
         else{
-          throw "Error";
+          console.error("Error");
         }
       })
       .catch((error) => {
@@ -102,6 +91,17 @@ class Review extends Component {
       })
   }
 
+  checkLike(){
+    if(this.state.liked === false) {
+      this.like();
+      this.setState({thumb: "thumbs-up"});
+
+    }
+    else if(this.state.liked === true){
+      this.unlike();
+      this.setState({thumb: "thumbs-o-up"});
+    }
+  }
 
   render() {
     const review = this.props.reviewData;
@@ -181,5 +181,11 @@ const styles = StyleSheet.create({
     color: 'yellow'
   }
 })
+
+
+Review.propTypes = {
+  reviewData: PropTypes.instanceOf(Object).isRequired,
+  reviewLocId: PropTypes.number.isRequired
+}
 
 export default Review;

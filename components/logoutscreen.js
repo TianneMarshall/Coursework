@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
-import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PropTypes from 'prop-types';
 
 class LogoutScreen extends Component{
-
-  constructor(props){
-    super(props)
-
-    this.state={
-      email: '',
-      password: ''
-    }
-  }
 
   signout = async () => {
 
@@ -26,7 +18,7 @@ class LogoutScreen extends Component{
         }
       })
       .then((response) => {
-        if(response.status == 200) {
+        if(response.status === 200) {
           Alert.alert("Logged out")
           this.props.navigation.navigate('Sign In')
         }
@@ -40,6 +32,7 @@ class LogoutScreen extends Component{
       });
   }
 
+
   render() {
     return(
       <View>
@@ -50,7 +43,12 @@ class LogoutScreen extends Component{
       </View>
     );
   }
+}
 
+LogoutScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
 }
 
 export default LogoutScreen;

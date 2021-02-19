@@ -1,11 +1,12 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Alert, Button, FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Reviews from './reviews';
+import Toast from 'react-native-simple-toast';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import PropTypes from 'prop-types';
 import Review from './review';
 import Location from './location';
-import Toast from 'react-native-simple-toast';
-import  Icon from 'react-native-vector-icons/FontAwesome';
 
 class LocationScreen extends Component{
 
@@ -20,11 +21,15 @@ class LocationScreen extends Component{
     }
   }
 
+  componentDidMount() {
+    this.getLocation();
+  }
+
   getLocation = async () => {
 
-    const loc = this.props.route.params.locId;
+    const {locId} = this.props.route.params;
 
-    return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + loc)
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  locId}`)
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({
@@ -38,24 +43,12 @@ class LocationScreen extends Component{
     });
   }
 
-  checkFavourite(){
-    if(this.state.favourited == false) {
-      this.favourite();
-      this.setState({hearted: "heart"});
-
-    }
-    else if(this.state.favourited == true){
-      this.unfavourite();
-      this.setState({hearted: "heart-o"});
-    }
-  }
-
   favourite = async () => {
 
     const token = await AsyncStorage.getItem('@session_token');
-    const loc_id = this.state.location_id.toString();
+    const locId = this.state.location_id.toString();
 
-      return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + loc_id + "/favourite",
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  locId  }/favourite`,
       {
         method: 'POST',
         headers: {
@@ -64,21 +57,20 @@ class LocationScreen extends Component{
         }
       })
       .then((response) => {
-        if(response.status == 200) {
+        if(response.status === 200) {
           this.setState({
-            favourited: true,
-            hearted: 'heart'
+            favourited: true
           });
           Toast.show('Favourited!', Toast.LONG);
         }
-        else if(response.status == 401) {
-          throw "Could not favourite";
+        else if(response.status === 401) {
+          console.error("Could not favourite");
         }
-        else if(response.status == 404) {
-          throw "Could not get location";
+        else if(response.status === 404) {
+          console.error("Could not get location");
         }
         else{
-          throw "Error";
+          console.error("Error");
         }
       })
       .catch((error) => {
@@ -89,9 +81,9 @@ class LocationScreen extends Component{
     unfavourite = async () => {
 
       const token = await AsyncStorage.getItem('@session_token');
-      const loc_id = this.state.location_id.toString();
+      const locId = this.state.location_id.toString();
 
-      return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + loc_id + "/favourite",
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  locId  }/favourite`,
       {
         method: 'DELETE',
         headers: {
@@ -100,20 +92,20 @@ class LocationScreen extends Component{
         }
       })
       .then((response) => {
-        if(response.status == 200){
+        if(response.status === 200){
           this.setState({
             favourited: false
           });
-          Toast.show('Unfavourited!', Toast.LONG);
+          Toast.show("Unfavourited!", Toast.LONG);
         }
-        else if(response.status == 401) {
-          throw "Could not favourite";
+        else if(response.status === 401) {
+          console.error("Could not favourite");
         }
-        else if(response.status == 404) {
-          throw "Could not get location";
+        else if(response.status === 404) {
+          console.error("Could not get location");
         }
         else{
-          throw "Error";
+          console.error("Error");
         }
       })
       .catch((error) => {
@@ -121,13 +113,19 @@ class LocationScreen extends Component{
       })
     }
 
-  componentDidMount() {
-    this.getLocation();
-  }
+    checkFavourite(){
+      if(this.state.favourited === false) {
+        this.favourite();
+  
+      }
+      else if(this.state.favourited === true){
+        this.unfavourite();
+      }
+    }
 
   render() {
     const navigation = this.props.navigation;
-    let icon = this.state.favourited ? 'heart' : 'heart-o';
+    const icon = this.state.favourited ? 'heart' : 'heart-o';
 
     return(
       <View style={styles.location}>
@@ -161,7 +159,7 @@ class LocationScreen extends Component{
 
             <Review reviewData={item} reviewLocId={this.state.location_id}/>
             }
-            keyExtractor={({review_id}, index) => review_id.toString()}
+            keyExtractor={({review_id}) => review_id.toString()}
           />
 
         </ScrollView>
@@ -185,4 +183,11 @@ const styles=StyleSheet.create({
     margin: 10
   }
 })
+
+LocationScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired,
+  route: PropTypes.instanceOf(Object).isRequired
+}
 export default LocationScreen;

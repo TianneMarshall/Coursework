@@ -1,7 +1,9 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, StyleSheet, FlatList,  Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Text, TextInput, View, Button, StyleSheet, Alert } from 'react-native';
 import Toast from 'react-native-simple-toast';
+import PropTypes from 'prop-types';
+
 class SignUpScreen extends Component {
   constructor(props) {
     super(props)
@@ -27,8 +29,8 @@ class SignUpScreen extends Component {
           password: this.state.password
         })
       })
-      .then((response) => {
-        Toast.show('Successfully registered!', Toast.LONG);
+      .then(() => {
+        Toast.show("Successfully registered!");
         this.props.navigation.navigate('Sign In');
       })
       .catch((error) => {
@@ -38,19 +40,19 @@ class SignUpScreen extends Component {
     }
 
   checkValidInput() {
-    if(this.state.first_name == ''){
+    if(this.state.first_name === ''){
       Alert.alert('please enter first name');
     }
-    else if(this.state.last_name == ''){
+    else if(this.state.last_name === ''){
       Alert.alert('please enter last name');
     }
-    else if(this.state.email == ''){
+    else if(this.state.email === ''){
       Alert.alert('please enter email');
     }
-    else if(this.state.password == ''){
+    else if(this.state.password === ''){
       Alert.alert('please enter password');
     }
-    else if (this.state.password != this.state.confirmPassword) {
+    else if (this.state.password !== this.state.confirmPassword) {
       Alert.alert("Password does not match, please confirm password")
     }
     else{
@@ -98,7 +100,7 @@ class SignUpScreen extends Component {
           <Text style={styles.label}> Password: </Text>
           <TextInput style={styles.field}
             placeholder="Enter your password"
-            secureTextEntry={true}
+            secureTextEntry
             onChangeText={(password) => {this.setState({password})}}
             value={this.state.password}
           />
@@ -108,7 +110,7 @@ class SignUpScreen extends Component {
           <Text style={styles.label}> Confirm Password: </Text>
           <TextInput style={styles.field}
             placeholder="Enter your password"
-            secureTextEntry={true}
+            secureTextEntry
             onChangeText={(confirmPassword) => {this.setState({confirmPassword})}}
             value={this.state.confirmPassword}
           />
@@ -150,4 +152,10 @@ const styles = StyleSheet.create({
   }
 
 })
+
+SignUpScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
+}
 export default SignUpScreen;
