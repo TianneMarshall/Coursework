@@ -1,11 +1,9 @@
+/* eslint-disable linebreak-style */
 import 'react-native-gesture-handler';
-
-import React, { Component } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import  Icon from 'react-native-vector-icons/FontAwesome';
-
 import Homescreen from './components/homescreen';
 import ProfileScreen from './components/profilescreen';
 import SignUpScreen from './components/signupscreen';
@@ -15,11 +13,11 @@ import LogoutScreen from './components/logoutscreen';
 import LocationScreen from './components/locationscreen';
 import EditProfileScreen from './components/editprofilescreen';
 import WriteReviewScreen from './components/writeReviewScreen';
+import MyLocation from './components/myLocation';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 const UserStack = createStackNavigator();
-const LoginStack = createStackNavigator();
 
 function UserNav() {
   return(
@@ -35,6 +33,7 @@ function HomeNav() {
   return(
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Homescreen} />
+      <Stack.Screen name="MyLocation" component={MyLocation}/>
       <Stack.Screen name="LocationScreen" component={LocationScreen} />
       <Stack.Screen name="Location" component={Location} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
@@ -53,13 +52,7 @@ function LoginNav() {
 }
 
 
-class App extends Component {
-  constructor(props){
-    super(props);
-
-  }
-
-  render() {
+function App () {
     return (
 
       <NavigationContainer>
@@ -71,6 +64,6 @@ class App extends Component {
         </Tab.Navigator>
       </NavigationContainer>
     );
-  }
+  
 }
 export default App;

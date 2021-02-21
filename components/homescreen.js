@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { Alert, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Button } from 'native-base'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
 
@@ -42,14 +43,18 @@ class Homescreen extends Component {
 
   render() {
 
-    const navigation = this.props.navigation;
+    const navigator = this.props.navigation;
 
     return (
       <View>
+        <Button info block rounded onPress={() => navigator.navigate('MyLocation', {locations: this.state.locations})}>
+          <Text> Search Nearby </Text>
+        </Button>
+
         <FlatList
           data={this.state.locations}
           renderItem={({item}) =>
-              <TouchableOpacity onPress={() => navigation.navigate('LocationScreen', {locId: item.location_id})}>
+              <TouchableOpacity onPress={() => navigator.navigate('LocationScreen', {locId: item.location_id})}>
                 <View style={styles.location}>
                   <Text style={{fontSize: 20}}>{item.location_name}</Text>
                   <Text>{item.location_town}</Text>
