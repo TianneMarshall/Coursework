@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, StyleSheet, Alert } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
+import {Button, Text, View, List, ListItem, Input} from 'native-base';
 import Toast from 'react-native-simple-toast';
 import PropTypes from 'prop-types';
 
@@ -63,95 +64,60 @@ class SignUpScreen extends Component {
   render() {
 
     return(
-      <View style={styles.form}>
+      <ScrollView>
+        <List>
+          <ListItem>
+            <Input
+              placeholder="Enter your first name.."
+              onChangeText={(first_name) => {this.setState({first_name})}}
+              value={this.state.first_name}
+            />
+          </ListItem>
 
-        <View style={styles.titles}>
-          <Text> Sign up </Text>
-        </View>
+          <ListItem>
+            <Input 
+              placeholder="Enter your last name.."
+              onChangeText={(last_name) => {this.setState({last_name})}}
+              value={this.state.last_name}
+            />
+          </ListItem>
 
-        <View style={styles.element}>
-          <Text style={styles.label}> First Name: </Text>
-          <TextInput style={styles.field}
-            placeholder="Enter your first name"
-            onChangeText={(first_name) => {this.setState({first_name})}}
-            value={this.state.first_name}
-          />
-        </View>
+          <ListItem>
+            <Input
+              placeholder="Enter your email address.."
+              onChangeText={(email) => {this.setState({email})}}
+              value={this.state.email}
+            />
+          </ListItem>
 
-        <View style={styles.element}>
-          <Text style={styles.label}> Last Name: </Text>
-          <TextInput style={styles.field}
-            placeholder="Enter your last name"
-            onChangeText={(last_name) => {this.setState({last_name})}}
-            value={this.state.last_name}
-          />
-        </View>
+          <ListItem inlineLabel>
+            <Input 
+              placeholder="Enter your password.."
+              secureTextEntry
+              onChangeText={(password) => {this.setState({password})}}
+              value={this.state.password}
+            />
+          </ListItem>
 
-        <View style={styles.element}>
-          <Text style={styles.label}> Email: </Text>
-          <TextInput style={styles.field}
-            placeholder="Enter your email address"
-            onChangeText={(email) => {this.setState({email})}}
-            value={this.state.email}
-          />
-        </View>
-
-        <View style={styles.element}>
-          <Text style={styles.label}> Password: </Text>
-          <TextInput style={styles.field}
-            placeholder="Enter your password"
-            secureTextEntry
-            onChangeText={(password) => {this.setState({password})}}
-            value={this.state.password}
-          />
-        </View>
-
-        <View style={styles.element}>
-          <Text style={styles.label}> Confirm Password: </Text>
-          <TextInput style={styles.field}
-            placeholder="Enter your password"
-            secureTextEntry
-            onChangeText={(confirmPassword) => {this.setState({confirmPassword})}}
-            value={this.state.confirmPassword}
-          />
-        </View>
-
-        <Button
-          title="Register"
-          onPress={() => this.checkValidInput()}
-        />
-      </View>
+          <ListItem>
+            <Input
+              placeholder="Re-enter your password.."
+              secureTextEntry
+              onChangeText={(confirmPassword) => {this.setState({confirmPassword})}}
+              value={this.state.confirmPassword}
+            />
+          </ListItem>
+      
+        </List>
+        
+        <Button primary block rounded onPress={() => this.checkValidInput()}>
+          <Text> Register </Text>
+        </Button>
+      </ScrollView>
     );
 
   }
 }
-
-const styles = StyleSheet.create({
-
-  form: {
-    flex: 1,
-    justifyContent: 'center'
-  },
-
-  titles: {
-    flex: 1,
-    alignItems: 'center',
-  },
-
-  element: {
-    flex: 2
-  },
-
-  field: {
-    borderWidth: 2,
-    borderColor: 'blue'
-  },
-
-  label:{
-    alignItems: 'center'
-  }
-
-})
 
 SignUpScreen.propTypes = {
   navigation: PropTypes.shape({

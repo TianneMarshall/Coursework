@@ -24,7 +24,7 @@ function Location (props) {
 
       <Text> overall rating: {location.avg_overall_rating} </Text>
       <Text> price: {location.avg_price_rating} </Text>
-      <Text> qaulity: {location.avg_quality_rating} </Text>
+      <Text> quality: {location.avg_quality_rating} </Text>
       <Text> cleanliness: {location.avg_clenliness_rating} </Text>
     </View>
   );

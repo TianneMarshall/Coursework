@@ -52,7 +52,7 @@ class ProfileScreen extends Component {
 
   render() {
 
-    const navigation = this.props.navigation;
+    const navigator = this.props.navigation;
 
     return (
       <View>
@@ -61,7 +61,7 @@ class ProfileScreen extends Component {
 
           <Button
             title="Edit Profile"
-            onPress={() => navigation.navigate('EditUser', {userData: this.state.user})}
+            onPress={() => navigator.navigate('EditUser', {userData: this.state.user})}
           />
 
           <TextInput
@@ -88,7 +88,7 @@ class ProfileScreen extends Component {
               data={this.state.favourite_locations}
               renderItem={({item}) =>
               <View>
-                <TouchableOpacity onPress={() => navigation.navigate('LocationScreen', {locId: item.location_id})}>
+                <TouchableOpacity onPress={() => navigator.navigate('LocationScreen', {locId: item.location_id})}>
                   <Icon
                     name='heart'
                     color= 'red'

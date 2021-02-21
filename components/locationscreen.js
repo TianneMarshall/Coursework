@@ -124,7 +124,7 @@ class LocationScreen extends Component{
     }
 
   render() {
-    const navigation = this.props.navigation;
+    const navigator = this.props.navigation;
     const icon = this.state.favourited ? 'heart' : 'heart-o';
 
     return(
@@ -144,7 +144,7 @@ class LocationScreen extends Component{
 
           <Button
             title="Write Review"
-            onPress={() => navigation.navigate('WriteReviewScreen', {locId: this.state.location_id})}
+            onPress={() => navigator.navigate('WriteReviewScreen', {locId: this.state.location_id})}
           />
 
           <TextInput

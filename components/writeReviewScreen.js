@@ -17,7 +17,6 @@ class WriteReviewScreen extends Component {
       price_rating: '',
       clenliness_rating: '',
     }
-
   }
 
   postReview = async () => {
@@ -61,28 +60,45 @@ class WriteReviewScreen extends Component {
     })
   }
 
-  profantiyCheck() {
-    const body = this.state.review_body.toLowerCase();
-    if(body.includes("cake")){
-      console.error("Error must not review cakes");
+  validityCheck() {
+    if(!this.state.overall_rating) {
+      this.setState({overall_rating: 0})
     }
-    else if(body.includes("tea")){
-      console.error("Error must not review tea");
+    if(!this.state.price_rating) {
+      this.setState({price_rating: 0})
     }
-    else if(body.includes("pastry") || body.includes("pastries")){
-      console.error("Error must not review pastries");
+    if(!this.state.quality_rating) {
+      this.setState({quality_rating: 0})
     }
-    else{
-      this.postReview();
+    if(!this.state.clenliness_rating) {
+      this.setState({clenliness_rating: 0})
     }
+    this.profanityCheck()
+  }
 
+  profanityCheck() {
+    const body = this.state.review_body.toLowerCase();
+    if(!body) {
+      console.error("Must write review body");
+    }
+    else if(body.includes("cake")){
+        console.error("Error must not review cakes");
+      }
+      else if(body.includes("tea")){
+        console.error("Error must not review tea");
+      }
+      else if(body.includes("pastry") || body.includes("pastries")){
+        console.error("Error must not review pastries");
+      }
+      else{
+        this.postReview();
+      }
   }
 
   render() {
     return(
       <View style={styles.review}>
-
-      <ScrollView>
+        <ScrollView>
           <View style={styles.rating}>
             <TextInput
               defaultValue="Quality"
@@ -96,8 +112,6 @@ class WriteReviewScreen extends Component {
               size={30}
               onFinishRating={(quality_rating) => this.setState({quality_rating})} />
           </View>
-
-
 
           <View style={styles.rating}>
             <TextInput
@@ -113,8 +127,6 @@ class WriteReviewScreen extends Component {
               onFinishRating={(price_rating) => this.setState({price_rating})} />
           </View>
 
-
-
           <View style={styles.rating}>
             <TextInput
               defaultValue="Cleanliness"
@@ -129,34 +141,31 @@ class WriteReviewScreen extends Component {
               onFinishRating={(clenliness_rating) => this.setState({clenliness_rating})} />
           </View>
 
+          <View style={styles.rating}>
+            <TextInput
+              defaultValue="Overall"
+              editable={false}
+            />
 
-        <View style={styles.rating}>
+            <AirbnbRating
+              count={5}
+              defaultRating={0}
+              reviews=''
+              size={30}
+              onFinishRating={(overall_rating) => this.setState({overall_rating})} />
+          </View>
+
           <TextInput
-            defaultValue="Overall"
-            editable={false}
+            style={styles.revBody}
+            placeholder="write review body"
+            onChangeText={(review_body) => this.setState({review_body})}
+            value={this.state.review_body}
           />
 
-          <AirbnbRating
-            count={5}
-            defaultRating={0}
-            reviews=''
-            size={30}
-            onFinishRating={(overall_rating) => this.setState({overall_rating})} />
-        </View>
-
-
-        <TextInput
-          style={styles.revBody}
-          placeholder="write review body"
-          onChangeText={(review_body) => this.setState({review_body})}
-          value={this.state.review_body}
-        />
-
-        <Button
-          title="Post Review"
-          onPress={() => this.profantiyCheck()}
-        />
-
+          <Button
+            title="Post Review"
+            onPress={() => this.validityCheck()}
+          />
         </ScrollView>
       </View>
     );
