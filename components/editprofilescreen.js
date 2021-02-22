@@ -13,6 +13,7 @@ class EditProfileScreen extends Component {
       originalFirstName: '',
       originalLastName: '',
       originalEmail: '',
+
       updatedFirstName: '',
       updatedLastName: '',
       updatedEmail: '',
@@ -29,13 +30,31 @@ class EditProfileScreen extends Component {
     this.setState({originalFirstName: user.first_name});
     this.setState({originalLastName: user.last_name});
     this.setState({originalEmail: user.email});
+    this.setState({updatedFirstName: user.first_name});
+    this.setState({updatedLastName: user.last_name});
+    this.setState({updatedEmail: user.email});
   }
 
-  editUser = async (toSend) => {
+  editUser = async () => {
+
+      let to_send = {};
+  
+      if (this.state.updatedFirstName != this.state.originalFirstName){
+        to_send['first_name'] = this.state.updatedFirstName;
+      }
+  
+      if (this.state.updatedLastName != this.state.originalLastName){
+        to_send['last_name'] = this.state.updatedLastName;
+      }
+  
+      if (this.state.updatedEmail != this.state.originalEmail){
+        to_send['email'] = this.state.updatedEmail;
+      }
+
+    console.log("original array", JSON.stringify(to_send))
+
     const userid = await AsyncStorage.getItem('@user_id');
     const token = await AsyncStorage.getItem('@session_token');
-
-    Alert.alert(JSON.stringify(toSend));
 
     return fetch(`http://10.0.2.2:3333/api/1.0.0/user/${userid}`, {
       method: 'PATCH',
@@ -43,19 +62,23 @@ class EditProfileScreen extends Component {
         'Content-Type': 'application/json',
         'X-Authorization': token,
       },
-      body: JSON.stringify(toSend),
+      body: JSON.stringify(to_send),
     })
       .then((response) => {
         if (response.status === 200) {
           Toast.show('Saved Changes!');
-        } else if (response.status === 400) {
+        } 
+        else if (response.status === 400) {
           console.error('Error invalid details');
-        } else if (response.status === 401) {
-          console.error('Error unauthorised');
-        } else if (response.status === 404) {
-          console.error('Error Can not find user');
-        } else {
-          console.error('Failed');
+        } 
+        else if (response.status === 401) {
+          console.error('Could not update details - Please log in');
+        } 
+        else if (response.status === 404) {
+          console.error('Error can not find user');
+        } 
+        else {
+          console.error('Error - Please try again later');
         }
       })
       .catch((error) => {
@@ -63,19 +86,6 @@ class EditProfileScreen extends Component {
       });
   };
 
-  checkChanges() {
-    const toSend = {};
-    if (this.state.originalFirstName !== this.state.updatedFirstName) {
-      toSend.first_name = this.state.updatedFirstName;
-    }
-    if (this.state.originalLastName !== this.state.updatedLastName) {
-      toSend.last_name = this.state.updatedLastName;
-    }
-    if (this.state.originalEmail !== this.state.updatedEmail) {
-      toSend.email = this.state.updatedEmail;
-    }
-    this.editUser(toSend);
-  }
 
   render() {
     return (
@@ -83,24 +93,23 @@ class EditProfileScreen extends Component {
         <Icon style={styles.image} name="user-circle" size={60} />
         <TextInput
           style={styles.textBox}
-          defaultValue={this.state.originalFirstName}
-          onChangeText={(updatedFirstName) =>
-            this.setState({updatedFirstName})
-          }
+          placeholder={this.state.originalFirstName}
+          onChangeText={(updatedFirstName) => this.setState({updatedFirstName})}
+          value={this.state.updatedFirstName}
         />
         <TextInput
           style={styles.textBox}
-          defaultValue={this.state.originalLastName}
-          onChangeText={(updatedLastName) =>
-            this.setState({updatedLastName})
-          }
+          placeholder={this.state.originalLastName}
+          onChangeText={(updatedLastName) => this.setState({updatedLastName})}
+          value={this.state.updatedLastName}
         />
         <TextInput
           style={styles.textBox}
-          defaultValue={this.state.originalEmail}
+          placeholder={this.state.originalEmail}
           onChangeText={(updatedEmail) => this.setState({updatedEmail})}
+          value={this.state.updatedEmail}
         />
-        <Button title="Save Changes" onPress={() => this.checkChanges()} />
+        <Button title="Save Changes" onPress={() => this.editUser()} />
       </View>
     );
   }
