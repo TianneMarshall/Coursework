@@ -14,10 +14,13 @@ class EditProfileScreen extends Component {
       originalLastName: '',
       originalEmail: '',
       originalPassword:'',
+      originalConPassword: '',
 
       updatedFirstName: '',
       updatedLastName: '',
       updatedEmail: '',
+      updatedPassword: '',
+      updatedConPassword: ''
     };
   }
 
@@ -33,10 +36,12 @@ class EditProfileScreen extends Component {
       originalLastName: user.last_name,
       originalEmail: user.email,
       originalPassword: user.password,
+      originalConPassword: user.password,
       updatedFirstName: user.first_name,
       updatedLastName: user.last_name,
       updatedEmail: user.email,
-      updatedPassword: user.password
+      updatedPassword: user.password,
+      updatedConPassword: user.password
     });
   }
 
@@ -92,7 +97,13 @@ class EditProfileScreen extends Component {
     }
 
     if (this.state.updatedPassword !== this.state.originalPassword){
-      newInfo.password = this.state.updatedPassword;
+      if(this.state.updatedConPassword !== this.state.updatedPassword){
+        throw Error("Passwords do not match, re-type password")
+      }
+      else{
+        newInfo.password = this.state.updatedPassword;
+      }
+      
     }
       
     this.editUser(newInfo)
@@ -126,6 +137,12 @@ class EditProfileScreen extends Component {
           placeholder="Enter new password.."
           onChangeText={(updatedPassword) => this.setState({updatedPassword})}
           value={this.state.updatedPassword}
+        />
+        <TextInput
+          style={styles.textBox}
+          secureTextEntry
+          placeholder="Confirm new password.."
+          onChangeText={(updatedConPassword) => this.setState({updatedConPassword})}
         />
         <Button title="Save Changes" onPress={() => this.checkChanges()} />
       </View>

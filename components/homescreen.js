@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { Button, Text, Card, CardItem, Thumbnail, Header, Item, Left, Input } from 'native-base'
+import { Text, Card, CardItem, Thumbnail, Header, Item, Input } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
@@ -29,8 +29,9 @@ class Homescreen extends Component {
   getLocations = async () => {
 
     const token = await AsyncStorage.getItem('@session_token');
+    const searchValue = this.state.searchInput;
 
-    return fetch("http://10.0.2.2:3333/api/1.0.0/find",
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/find?q=${  searchValue}`,
     {
         headers: {
           'Content-Type': 'application/json',
@@ -61,41 +62,6 @@ class Homescreen extends Component {
       });
   }
 
-  search = async () => {
-
-    const token = await AsyncStorage.getItem('@session_token');
-    const searchValue = this.state.searchInput;
-
-    return fetch(`http://10.0.2.2:3333/api/1.0.0/find?${  searchValue}`,
-    {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': token
-        }
-    })
-    .then((response) => {
-      if(response.status === 400){
-        throw Error("Could not load locations - Bad Request")
-      }
-      else if(response.status === 401) {
-        throw Error("Could not load locations - Please log in")
-      }
-      else if(response.status === 500) {
-        throw Error("Error - please try again later")
-      }
-        return response;
-    })
-    .then((response) => response.json())
-    .then((responseJson) =>{
-      this.setState({
-        locations: responseJson
-      })
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-    
-  }
 
   render() {
 
@@ -106,23 +72,12 @@ class Homescreen extends Component {
         <Header searchBar transparent>
           <Item>
             <Input placeholder="Search" onChangeText={(searchInput) => this.setState({searchInput})}/>
-            <Icon 
-              style={styles.button}
-              name="search"  
-              color='#0033cc'
-              size={30} onPress={() => this.search()}
+            <Icon style={styles.button}
+              name="search" color='#0033cc'size={30} 
+              onPress={() => this.getLocations()}
             />
-            <Icon
-              style={styles.button}
-              name="filter"
-              color='#8600b3'
-              size={32}
-            />
-            <Icon 
-              style={styles.button}
-              name='map-pin'
-              color='#cc99ff'
-              size={28}
+            <Icon style={styles.button}
+              name='map-pin' color='#cc99ff' size={28}
               onPress={() => navigator.navigate('MyLocation', {locations: this.state.locations})}
             />
           </Item>
@@ -135,7 +90,6 @@ class Homescreen extends Component {
                 <Thumbnail source={{uri: item.photo_path}} />
                 <Text style={{fontSize: 20}}>{item.location_name}</Text>
               </CardItem>
-
               <CardItem >
                 <Text>{item.location_town}</Text>
               </CardItem>
