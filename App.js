@@ -25,9 +25,9 @@ function UserNav() {
   return(
     <UserStack.Navigator>
       <UserStack.Screen name="Profile" component={ProfileScreen} />
-      <UserStack.Screen name="EditUser" component={EditProfileScreen} />
+      <UserStack.Screen name="Edit User" component={EditProfileScreen} />
       <UserStack.Screen name="MyReviews" component={MyReviews} />
-      <UserStack.Screen name="EditReview" component={EditReviewScreen} />
+      <UserStack.Screen name="Edit Review" component={EditReviewScreen} />
       <UserStack.Screen name="LocationScreen" component={LocationScreen} />
     </UserStack.Navigator>
   );
@@ -36,7 +36,7 @@ function UserNav() {
 function HomeNav() {
   return(
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={Homescreen} />
+      <Stack.Screen name="Home" options={{headerShown: false}} component={Homescreen} />
       <Stack.Screen name="MyLocation" component={MyLocation}/>
       <Stack.Screen name="LocationScreen" component={LocationScreen} />
       <Stack.Screen name="Location" component={Location} />
@@ -55,19 +55,17 @@ function LoginNav() {
   );
 }
 
-
 function App () {
-    return (
+  return (
 
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Sign In" component={LoginNav} />
-          <Tab.Screen name="Home" component={HomeNav} />
-          <Tab.Screen name="Profile" component={UserNav} />
-          <Tab.Screen name="Sign out" component={LogoutScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    );
-  
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Sign In" component={LoginNav} />
+        <Tab.Screen name="Home" component={HomeNav} />
+        <Tab.Screen name="Profile" component={UserNav} />
+        <Tab.Screen name="Sign out" component={LogoutScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
 }
 export default App;
