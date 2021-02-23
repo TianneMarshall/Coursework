@@ -21,8 +21,14 @@ class ProfileScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    this.getUser();
+  componentDidMount(){
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.getUser();
+    })
+  }
+
+  componentWillUnmount(){
+    this.unsubscribe()
   }
 
   getUser = async () => {
@@ -74,7 +80,7 @@ class ProfileScreen extends Component {
         <ScrollView>
           <User userData={this.state.user} />
 
-          <Button primary block rounded onPress={() => navigator.navigate('EditUser', {userData: this.state.user})}>
+          <Button primary block rounded onPress={() => navigator.navigate('Edit User', {userData: this.state.user})}>
             <Text> Edit Profile</Text>
           </Button>
 
@@ -105,30 +111,32 @@ class ProfileScreen extends Component {
             renderItem={({item}) =>
             <View>
               <TouchableOpacity onPress={() => navigator.navigate('LocationScreen', {locId: item.location_id})}>
-              <Card>
-                <CardItem style={styles.image}>
-                  <Icon
-                    name='heart'
-                    color= 'red'
-                    size={50}
-                  />
-                </CardItem>
-                <CardItem>
-                  <Thumbnail source={{uri: item.photo_path}}/>
-                  <Text style={{fontSize: 20}}> {item.location_name}</Text>
-                </CardItem>
-                <Text> {item.location_town}</Text>
-                <Text> Overall Rating: {item.avg_overall_rating} </Text>
-              </Card>
+                <Card style={styles.location}>
+                  <CardItem style={styles.image}>
+                    <Icon
+                      name='heart'
+                      color= 'red'
+                      size={50}
+                    />
+                  </CardItem>
+                  <CardItem style={styles.card}>
+                    <Thumbnail source={{uri: item.photo_path}}/>
+                    <TextInput 
+                      style={styles.locTitle} 
+                      editable={false}
+                      defaultValue={item.location_name}
+                    />
+                  </CardItem>
+                  <Text> {item.location_town}</Text>
+                  <Text> Overall Rating: {item.avg_overall_rating} </Text>
+                </Card>
               </TouchableOpacity>
             </View>
             }
             keyExtractor={({location_id}) => location_id.toString()}
           />
-
         </ScrollView>
       </View>
-
     );
   }
 }
@@ -137,6 +145,11 @@ const styles=StyleSheet.create({
   screen: {
     flex: 1
   },
+
+  location: {
+    paddingBottom: 30
+  },
+
   title: {
     color: 'black',
     fontSize: 20
@@ -152,15 +165,25 @@ const styles=StyleSheet.create({
   },
 
   image: {
-    alignSelf: 'flex-end',
-    margin: 10
+    alignSelf: 'flex-end'
+  },
+
+  locTitle: {
+    fontSize: 25,
+    color: 'black'
+  },
+  card: {
+    borderBottomWidth: 2,
+    borderColor: '#bf80ff',
+    marginBottom: 15
   }
 })
 
 
 ProfileScreen.propTypes = {
   navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired
+    navigate: PropTypes.func.isRequired,
+    addListener: PropTypes.func.isRequired
   }).isRequired
 }
 

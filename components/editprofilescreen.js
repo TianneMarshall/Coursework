@@ -28,19 +28,19 @@ class EditProfileScreen extends Component {
   getOriginalData() {
     const user = this.props.route.params.userData;
 
-    this.setState({originalFirstName: user.first_name});
-    this.setState({originalLastName: user.last_name});
-    this.setState({originalEmail: user.email});
-    this.setState({originalPassword: user.password});
-
-    this.setState({updatedFirstName: user.first_name});
-    this.setState({updatedLastName: user.last_name});
-    this.setState({updatedEmail: user.email});
-    this.setState({updatedPassword: user.password});
+    this.setState({
+      originalFirstName: user.first_name,
+      originalLastName: user.last_name,
+      originalEmail: user.email,
+      originalPassword: user.password,
+      updatedFirstName: user.first_name,
+      updatedLastName: user.last_name,
+      updatedEmail: user.email,
+      updatedPassword: user.password
+    });
   }
 
   editUser = async (newInfo) => {
-
 
     const userid = await AsyncStorage.getItem('@user_id');
     const token = await AsyncStorage.getItem('@session_token');

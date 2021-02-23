@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, TextInput } from 'react-native';
-import { Button, Text, View } from 'native-base';
+import { StyleSheet, TextInput } from 'react-native';
+import { Button, Text, View, Form, Textarea } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -149,8 +149,8 @@ class editReviewScreen extends Component {
 
         <View style={styles.rating}>
             <TextInput
-                defaultValue="Overall"
-                editable={false}
+              defaultValue="Overall"
+              editable={false}
             />
              <Stars
               rating={this.state.originalOverall}
@@ -215,15 +215,14 @@ class editReviewScreen extends Component {
               halfStar={<Icon name="star-half" size={40} color='gold'/>}
             />
           </View>
-          <ScrollView>
-            <TextInput
+          <Form>
+            <Textarea
               style={styles.revBody}
-              placeholder={this.state.originalBody}
+              rowSpan={5}
               onChangeText={(updatedBody) => this.setState({updatedBody})}
               value={this.state.updatedBody}
             />
-          </ScrollView>
-          
+          </Form>
           <Button primary rounded style={styles.button} onPress={() => this.profanityCheck()}>
             <Text>Update Review</Text>
           </Button>
@@ -231,11 +230,9 @@ class editReviewScreen extends Component {
     );
   }
 }
-
 const styles = StyleSheet.create({
   review: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center'
   },
 
@@ -246,18 +243,15 @@ const styles = StyleSheet.create({
   },
 
   revBody: {
-    flexDirection: 'column',
-    alignItems: 'stretch',
     alignSelf: 'center',
-    height: 100,
-    width: 200,
-    borderColor: 'blue',
-    borderWidth: 3
-
+    borderColor: '#bf80ff',
+    borderWidth: 2,
+    margin: 20, 
+    width: 350,
   },
   button: {
     alignSelf: 'center',
-    margin: 10
+    marginTop: 20
   }
 })
 

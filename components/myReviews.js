@@ -124,14 +124,14 @@ class MyReviews extends Component {
                 <CardItem style={styles.buttons}>
                   <View style={styles.photoButton}>
                     <Button
-                      success
+                      style={{backgroundColor: '#cc99ff'}}
                       onPressIn={() => this.setState({review_id: item.review.review_id, location_id: item.location.location_id.toString()})}
                       onPress={() => this.takePicture()}>
                       <Text>Add Photo</Text>
                     </Button>
                   </View>
                   <View style={styles.editButton}>
-                    <Button info onPress={() => this.props.navigation.navigate('EditReview', {reviewLocId: item.location.location_id, reviewData: item.review})}>
+                    <Button info onPress={() => this.props.navigation.navigate('Edit Review', {reviewLocId: item.location.location_id, reviewData: item.review})}>
                       <Text>Edit Review</Text>
                     </Button>
                   </View>

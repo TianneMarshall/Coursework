@@ -127,8 +127,6 @@ class MyLocation extends Component {
 
   render() {
 
-
-
     if(this.state.isLoading){
       return(
         <View>
@@ -146,13 +144,13 @@ class MyLocation extends Component {
 
 const styles = StyleSheet.create({
 
-    location: {
-      flex: 1,
-      borderColor: 'blue',
-      borderWidth: 4,
-      margin: 8,
-      padding: 7
-    },
+  location: {
+    flex: 1,
+    borderColor: 'blue',
+    borderWidth: 4,
+    margin: 8,
+    padding: 7
+  },
 });
 
 MyLocation.propTypes = {

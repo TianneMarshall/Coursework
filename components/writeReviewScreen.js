@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, TextInput } from 'react-native';
-import { Button, Text, View } from 'native-base';
+import { StyleSheet, TextInput } from 'react-native';
+import { Button, Text, View, Form, Textarea } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
 import PropTypes from 'prop-types';
@@ -84,29 +84,27 @@ class WriteReviewScreen extends Component {
       console.error("Must write review body");
     }
     else if(body.includes("cake")){
-        console.error("Error must not review cakes");
-      }
-      else if(body.includes("tea")){
-        console.error("Error must not review tea");
-      }
-      else if(body.includes("pastry") || body.includes("pastries")){
-        console.error("Error must not review pastries");
-      }
-      else{
-        this.postReview();
-      }
+      console.error("Error must not review cakes");
+    }
+    else if(body.includes("tea")){
+      console.error("Error must not review tea");
+    }
+    else if(body.includes("pastry") || body.includes("pastries")){
+      console.error("Error must not review pastries");
+    }
+    else{
+      this.postReview();
+    }
   }
 
   render() {
     return(
       <View style={styles.review}>
-        <ScrollView>
           <View style={styles.rating}>
             <TextInput
               defaultValue="Quality"
               editable={false}
             />
-
             <Stars
               default={0}
               update={(quality_rating) => {this.setState({quality_rating})}}
@@ -123,7 +121,6 @@ class WriteReviewScreen extends Component {
               defaultValue="Price   "
               editable={false}
             />
-
             <Stars
               default={0}
               update={(price_rating) => {this.setState({price_rating})}}
@@ -139,7 +136,6 @@ class WriteReviewScreen extends Component {
               defaultValue="Cleanliness"
               editable={false}
             />
-
             <Stars
               default={0}
               update={(clenliness_rating) => {this.setState({clenliness_rating})}}
@@ -155,7 +151,6 @@ class WriteReviewScreen extends Component {
               defaultValue="Overall"
               editable={false}
             />
-
             <Stars
               default={0}
               update={(overall_rating) => {this.setState({overall_rating})}}
@@ -165,19 +160,19 @@ class WriteReviewScreen extends Component {
               emptyStar={<Icon name="star-o" size={40} color='gold'/>}
             />
           </View>
-
-          <TextInput
-            style={styles.revBody}
-            placeholder="write review body"
-            onChangeText={(review_body) => this.setState({review_body})}
-            value={this.state.review_body}
-          />
-
+          <Form>
+            <Textarea
+              style={styles.revBody}
+              rowSpan={5}
+              placeholder="Write review body"
+              onChangeText={(review_body) => this.setState({review_body})}
+              value={this.state.review_body}
+            />
+          </Form>
           <Button primary rounded style={styles.button} onPress={() => this.validityCheck()}>
             <Text>Post Review</Text>
           </Button>
 
-        </ScrollView>
       </View>
     );
   }
@@ -186,7 +181,6 @@ class WriteReviewScreen extends Component {
 const styles = StyleSheet.create({
   review: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center'
   },
 
@@ -197,16 +191,15 @@ const styles = StyleSheet.create({
   },
 
   revBody: {
-    flexDirection: 'column',
-    alignItems: 'stretch',
     alignSelf: 'center',
-    height: 100,
-    width: 200,
-    borderColor: 'blue',
-    borderWidth: 3
+    borderColor: '#bf80ff',
+    borderWidth: 2,
+    margin: 20, 
+    width: 350,
   },
   button: {
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginTop: 20
   }
 })
 

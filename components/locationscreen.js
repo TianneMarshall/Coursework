@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, Text } from 'native-base'
+import { Button, Text, Card } from 'native-base'
 import Toast from 'react-native-simple-toast';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
@@ -153,9 +153,7 @@ class LocationScreen extends Component{
 
     return(
       <View style={styles.location}>
-
         <ScrollView>
-
           <TouchableOpacity style={styles.image} onPress={() => this.checkFavourite()}>
             <Icon
               name={icon}
@@ -179,14 +177,13 @@ class LocationScreen extends Component{
           <FlatList
             data={this.state.reviews}
             renderItem={({item}) =>
-
-            <Review reviewData={item} reviewLocId={this.state.location_id}/>
+            <Card>
+              <Review reviewData={item} reviewLocId={this.state.location_id}/> 
+            </Card>
             }
             keyExtractor={({review_id}) => review_id.toString()}
           />
-
         </ScrollView>
-
       </View>
     );
   }
@@ -203,6 +200,11 @@ const styles=StyleSheet.create({
 
   image: {
     alignItems: 'flex-end',
+    margin: 10
+  },
+  
+  reviews: {
+    flex: 1,
     margin: 10
   }
 })

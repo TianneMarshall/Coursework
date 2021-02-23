@@ -15,17 +15,14 @@ function Location (props) {
 
       <Image
         source={{uri: location.photo_path}}
-        style={{width: 200, height: 200}}
+        style={{width: 200, height: 150}}
       />
 
       <Text> {location.location_town} </Text>
-      <Text> longitude: {location.longitude} </Text>
-      <Text> latitude: {location.latitude} </Text>
-
-      <Text> overall rating: {location.avg_overall_rating} </Text>
-      <Text> price: {location.avg_price_rating} </Text>
-      <Text> quality: {location.avg_quality_rating} </Text>
-      <Text> cleanliness: {location.avg_clenliness_rating} </Text>
+      <Text> Overall Rating: {location.avg_overall_rating} </Text>
+      <Text> Price: {location.avg_price_rating} </Text>
+      <Text> Quality: {location.avg_quality_rating} </Text>
+      <Text> Cleanliness: {location.avg_clenliness_rating} </Text>
     </View>
   );
 }
