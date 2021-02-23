@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CardItem } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-simple-toast';
 import PropTypes from 'prop-types';
@@ -35,18 +36,19 @@ class Review extends Component {
       .then((response) => {
         if(response.status === 200){
           this.setState({
-            liked: true
+            liked: true,
+            thumb: 'thumbs-up'
           });
           Toast.show('Liked!');
         }
         else if(response.status === 401) {
-          console.error("Could not like");
+          throw Error("Could not like");
         }
         else if(response.status === 404) {
-          console.error("Could not get review");
+          throw Error("Could not get review");
         }
         else{
-          console.error("Error");
+          throw Error("Error");
         }
       })
       .catch((error) => {
@@ -72,18 +74,19 @@ class Review extends Component {
       .then((response) => {
         if(response.status === 200){
           this.setState({
-            liked: false
+            liked: false,
+            thumb: "thumbs-o-up"
           });
           Toast.show('Unliked!', Toast.LONG);
         }
         else if(response.status === 401) {
-          console.error("Could not unlike");
+          throw Error("Could not unlike");
         }
         else if(response.status === 404) {
-          console.error("Could not get review");
+          throw Error("Could not get review");
         }
         else{
-          console.error("Error");
+          throw Error("Error");
         }
       })
       .catch((error) => {
@@ -94,12 +97,10 @@ class Review extends Component {
   checkLike(){
     if(this.state.liked === false) {
       this.like();
-      this.setState({thumb: "thumbs-up"});
 
     }
     else if(this.state.liked === true){
       this.unlike();
-      this.setState({thumb: "thumbs-o-up"});
     }
   }
 
@@ -148,8 +149,10 @@ class Review extends Component {
           />
           <Ratings reviewData={review.clenliness_rating} />
         </View>
-
-        <Text> {review.review_body} </Text>
+        <View style={styles.revBody}>
+          <Text> {review.review_body} </Text>
+        </View>
+        
       </View>
     );
   }
@@ -158,9 +161,8 @@ class Review extends Component {
 const styles = StyleSheet.create({
   review: {
     flex: 1,
-    borderColor: 'blue',
-    borderWidth: 3,
-    margin: 10,
+    marginRight: 15,
+    marginLeft: 15,
     padding: 15
   },
 
@@ -179,6 +181,9 @@ const styles = StyleSheet.create({
 
   star: {
     color: 'yellow'
+  },
+  revBody: {
+    alignSelf: 'center'
   }
 })
 

@@ -1,10 +1,12 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Button, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, TextInput } from 'react-native';
+import { Button, Text, View } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
-import { AirbnbRating } from 'react-native-ratings';
 import PropTypes from 'prop-types';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Stars from 'react-native-stars';
 
 class WriteReviewScreen extends Component {
   constructor(props){
@@ -105,26 +107,31 @@ class WriteReviewScreen extends Component {
               editable={false}
             />
 
-            <AirbnbRating
+            <Stars
+              default={0}
+              update={(quality_rating) => {this.setState({quality_rating})}}
               count={5}
-              defaultRating={0}
-              reviews=''
-              size={30}
-              onFinishRating={(quality_rating) => this.setState({quality_rating})} />
+              spacing={8}
+              fullStar={<Icon name="star" size={40} color='gold'/>}
+              emptyStar={<Icon name="star-o" size={40} color='gold'/>}
+            />
+
           </View>
 
           <View style={styles.rating}>
             <TextInput
-              defaultValue="Price"
+              defaultValue="Price   "
               editable={false}
             />
 
-            <AirbnbRating
+            <Stars
+              default={0}
+              update={(price_rating) => {this.setState({price_rating})}}
               count={5}
-              defaultRating={0}
-              reviews=''
-              size={30}
-              onFinishRating={(price_rating) => this.setState({price_rating})} />
+              spacing={8}
+              fullStar={<Icon name="star" size={40} color='gold'/>}
+              emptyStar={<Icon name="star-o" size={40} color='gold'/>}
+            />
           </View>
 
           <View style={styles.rating}>
@@ -133,12 +140,14 @@ class WriteReviewScreen extends Component {
               editable={false}
             />
 
-            <AirbnbRating
+            <Stars
+              default={0}
+              update={(clenliness_rating) => {this.setState({clenliness_rating})}}
               count={5}
-              defaultRating={0}
-              reviews=''
-              size={30}
-              onFinishRating={(clenliness_rating) => this.setState({clenliness_rating})} />
+              spacing={8}
+              fullStar={<Icon name="star" size={40} color='gold'/>}
+              emptyStar={<Icon name="star-o" size={40} color='gold'/>}
+            />
           </View>
 
           <View style={styles.rating}>
@@ -147,12 +156,14 @@ class WriteReviewScreen extends Component {
               editable={false}
             />
 
-            <AirbnbRating
+            <Stars
+              default={0}
+              update={(overall_rating) => {this.setState({overall_rating})}}
               count={5}
-              defaultRating={0}
-              reviews=''
-              size={30}
-              onFinishRating={(overall_rating) => this.setState({overall_rating})} />
+              spacing={8}
+              fullStar={<Icon name="star" size={40} color='gold'/>}
+              emptyStar={<Icon name="star-o" size={40} color='gold'/>}
+            />
           </View>
 
           <TextInput
@@ -162,10 +173,10 @@ class WriteReviewScreen extends Component {
             value={this.state.review_body}
           />
 
-          <Button
-            title="Post Review"
-            onPress={() => this.validityCheck()}
-          />
+          <Button primary rounded style={styles.button} onPress={() => this.validityCheck()}>
+            <Text>Post Review</Text>
+          </Button>
+
         </ScrollView>
       </View>
     );
@@ -175,22 +186,27 @@ class WriteReviewScreen extends Component {
 const styles = StyleSheet.create({
   review: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 
   rating: {
-    alignItems: 'flex-start',
     flexDirection: 'row',
-    textAlign: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 
   revBody: {
     flexDirection: 'column',
     alignItems: 'stretch',
+    alignSelf: 'center',
     height: 100,
     width: 200,
     borderColor: 'blue',
     borderWidth: 3
+  },
+  button: {
+    alignSelf: 'center'
   }
 })
 

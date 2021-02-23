@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Button, FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Button, Text, Card, CardItem } from 'native-base'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-simple-toast';
@@ -37,19 +38,19 @@ class MyReviews extends Component {
         Toast.show('Review Deleted!');
       }
       else if(response.status === 400) {
-        console.error("Bad Request - Invalid delete request");
+        throw Error("Bad Request - Invalid delete request");
       }
       else if(response.status === 401) {
-        console.error("Unauthorised - Can not delete review");
+        throw Error("Unauthorised - Can not delete review");
       }
       else if(response.status === 403) {
-        console.error("Forbidden - Not your review");
+        throw Error("Forbidden - Not your review");
       }
       else if(response.status === 404){
-        console.error("Can not find review");
+        throw Error("Can not find review");
       }
       else {
-        console.error("Failed");
+        throw Error("Failed");
       }
     })
     .catch((error) => {
@@ -82,16 +83,16 @@ class MyReviews extends Component {
           Toast.show("Photo Taken!");
         }
         else if(response.status === 400) {
-          console.error("Error bad request");
+          throw Error("Error bad request");
         }
         else if(response.status === 401) {
-          console.error("Error Unauthorised");
+          throw Error("Error Unauthorised");
         }
         else if(response.status === 404) {
-          console.error("Error not found");
+          throw Error("Error not found");
         }
         else if(response.status === 500) {
-          console.error("Error Failed");
+          throw Error("Error Failed");
         }
       })
       .catch((error) => {
@@ -102,8 +103,9 @@ class MyReviews extends Component {
 
   render() {
 
+    const navigation = this.props.navigation;
     const review = this.props.reviewData;
-
+    
     return(
       <View style={styles.reviews}>
         <RNCamera
@@ -117,13 +119,24 @@ class MyReviews extends Component {
           data={review}
           renderItem={({item}) =>
             <View>
-              <Review reviewData={item.review} reviewLocId={item.location.location_id}/>
-
-              <Button
-                title="Add Photo"
-                onPressIn={() => this.setState({review_id: item.review.review_id, location_id: item.location.location_id})}
-                onPress={() => this.takePicture()}
-              />
+              <Card>
+                <Review reviewData={item.review} reviewLocId={item.location.location_id}/>
+                <CardItem style={styles.buttons}>
+                  <View style={styles.photoButton}>
+                    <Button
+                      success
+                      onPressIn={() => this.setState({review_id: item.review.review_id, location_id: item.location.location_id.toString()})}
+                      onPress={() => this.takePicture()}>
+                      <Text>Add Photo</Text>
+                    </Button>
+                  </View>
+                  <View style={styles.editButton}>
+                    <Button info onPress={() => this.props.navigation.navigate('EditReview', {reviewLocId: item.location.location_id, reviewData: item.review})}>
+                      <Text>Edit Review</Text>
+                    </Button>
+                  </View>
+                </CardItem>
+              </Card>
 
               <TouchableOpacity
                 style={styles.delete}
@@ -153,10 +166,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center'
+  },
+  buttons: {
+    flexDirection: 'row',
+    alignSelf: 'center'
+  },
+  photoButton: {
+    margin: 7
+  },
+  editButton: {
+    margin: 7
   }
 })
 
 MyReviews.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired,
   reviewData: PropTypes.instanceOf(Object).isRequired
 }
 

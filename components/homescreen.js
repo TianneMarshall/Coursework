@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Alert, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Button } from 'native-base'
+import { View, FlatList, StyleSheet } from 'react-native';
+import { Button, Text, Card, CardItem, Thumbnail } from 'native-base'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
 
@@ -29,14 +29,26 @@ class Homescreen extends Component {
           'X-Authorization': token
         }
     })
+      .then((response) => {
+        if(response.status === 400){
+          throw Error("Could not load locations - Bad Request")
+        }
+        else if(response.status === 401) {
+          throw Error("Could not load locations - Please log in")
+        }
+        else if(response.status === 500) {
+          throw Error("Error - please try again later")
+        }
+          return response;
+      })
       .then((response) => response.json())
       .then((responseJson) => {
-        this.setState({
-          locations: responseJson
-        });
+       
+          this.setState({
+            locations: responseJson
+          });
       })
       .catch((error) => {
-        Alert.alert("Could not load locations")
         console.error(error);
       });
   }
@@ -46,21 +58,31 @@ class Homescreen extends Component {
     const navigator = this.props.navigation;
 
     return (
-      <View>
-        <Button info block rounded onPress={() => navigator.navigate('MyLocation', {locations: this.state.locations})}>
+      <View style={styles.screen}>
+        <Button 
+          info 
+          rounded
+          style={styles.button}
+          onPress={() => navigator.navigate('MyLocation', {locations: this.state.locations})}>
           <Text> Search Nearby </Text>
         </Button>
 
         <FlatList
           data={this.state.locations}
           renderItem={({item}) =>
-              <TouchableOpacity onPress={() => navigator.navigate('LocationScreen', {locId: item.location_id})}>
-                <View style={styles.location}>
-                  <Text style={{fontSize: 20}}>{item.location_name}</Text>
-                  <Text>{item.location_town}</Text>
-                  <Text> {item.avg_overall_rating} </Text>
-                </View>
-              </TouchableOpacity>
+                <Card>
+                  <CardItem bordered button onPress={() => navigator.navigate('LocationScreen', {locId: item.location_id})}>
+                    <Thumbnail source={{uri: item.photo_path}} />
+                    <Text style={{fontSize: 20}}>{item.location_name}</Text>
+                  </CardItem>
+
+                  <CardItem>
+                    <Text>{item.location_town}</Text>
+                  </CardItem>
+                  <CardItem>
+                    <Text>Overall Rating: {item.avg_overall_rating} </Text>
+                  </CardItem>
+                </Card>
           }
           keyExtractor={({location_id}) => location_id.toString()}
         />
@@ -71,30 +93,12 @@ class Homescreen extends Component {
 
 const styles = StyleSheet.create({
 
-  location: {
+  screen: {
     flex: 1,
-    borderColor: 'blue',
-    borderWidth: 4,
-    margin: 8,
-    padding: 7
+    margin: 8
   },
-
-  name: {
-    fontSize: 15,
-    color: 'red'
-  },
-
-  element: {
-    flex: 2
-  },
-
-  field: {
-    borderWidth: 2,
-    borderColor: 'blue'
-  },
-
-  label:{
-    alignItems: 'center'
+  button: {
+    alignSelf: 'center'
   }
 
 })

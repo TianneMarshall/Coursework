@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Button, FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button, Text } from 'native-base'
 import Toast from 'react-native-simple-toast';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
@@ -30,6 +31,17 @@ class LocationScreen extends Component{
     const {locId} = this.props.route.params;
 
     return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  locId}`)
+    .then((response) => {
+      if(response.status === 404){
+        throw Error("Could not find venue - please select another")
+      }
+      else if(response.status === 500){
+        throw Error("Error - please try again later")
+      }
+      else{
+        return response;
+      }
+    })
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({
@@ -61,13 +73,19 @@ class LocationScreen extends Component{
           this.setState({
             favourited: true
           });
-          Toast.show('Favourited!', Toast.LONG);
+          Toast.show('Favourited!');
+        }
+        else if(response.status === 400){
+          console.error("Error - please try again later")
         }
         else if(response.status === 401) {
-          console.error("Could not favourite");
+          console.error("Could not favourite - Please sign in");
         }
         else if(response.status === 404) {
-          console.error("Could not get location");
+          console.error("Could not find location - try another");
+        }
+        else if(response.status === 500){
+          console.error("Error please try again later")
         }
         else{
           console.error("Error");
@@ -96,13 +114,19 @@ class LocationScreen extends Component{
           this.setState({
             favourited: false
           });
-          Toast.show("Unfavourited!", Toast.LONG);
+          Toast.show("Unfavourited!");
         }
         else if(response.status === 401) {
-          console.error("Could not favourite");
+          console.error("Could not unfavourite - Please sign in");
+        }
+        else if(response.status === 403){
+          console.error("Error - location is not in favourites")
         }
         else if(response.status === 404) {
-          console.error("Could not get location");
+          console.error("Could not find location - try another");
+        }
+        else if(response.status === 500){
+          console.error("Error - Please try again later")
         }
         else{
           console.error("Error");
@@ -142,10 +166,9 @@ class LocationScreen extends Component{
 
           <Location locationData={this.state.location} />
 
-          <Button
-            title="Write Review"
-            onPress={() => navigator.navigate('WriteReviewScreen', {locId: this.state.location_id})}
-          />
+          <Button info block rounded onPress={() => navigator.navigate('WriteReviewScreen', {locId: this.state.location_id})}>
+            <Text>Write Review</Text>
+          </Button>
 
           <TextInput
             style={styles.title}

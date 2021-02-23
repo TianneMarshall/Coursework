@@ -16,7 +16,6 @@ class LoginScreen extends Component{
     }
   }
 
-  /* Sign in endpoint */
   signin = async () => {
     return fetch("http://10.0.2.2:3333/api/1.0.0/user/login",
     {
@@ -33,13 +32,13 @@ class LoginScreen extends Component{
         return response.json()
       }
       if(response.status === 400){
-        console.error("Error - incorrect email/password");
+        throw Error("Error - incorrect email/password");
       }
       else if(response.status === 500) {
-        console.error("Error - please try again later");
+        throw Error("Error - please try again later");
       }
       else{
-        console.error("Failed")
+        throw Error("Failed")
       }
     })
     .then(async(responseJson) => {
@@ -59,7 +58,6 @@ class LoginScreen extends Component{
     return(
       <View style={styles.form}>
         <Form>
-          {/* this is a comment */}
           <Item>
             <Input regular
               style={styles.field}

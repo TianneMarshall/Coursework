@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { Alert, Button, View } from 'react-native';
+import { Component } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
+import Toast from 'react-native-simple-toast';
 
 class LogoutScreen extends Component{
 
@@ -19,28 +19,29 @@ class LogoutScreen extends Component{
       })
       .then((response) => {
         if(response.status === 200) {
-          Alert.alert("Logged out")
+          Toast.show("Successfully Signed out")
           this.props.navigation.navigate('Sign In')
         }
+        else if(response.status === 401) {
+          console.error("Error - Not signed in")
+        }
+        else if(response.status === 500){
+          console.error("Error - Please try again later")
+        }
         else{
-          Alert.alert("Failed")
+          console.error("Error - Failed to sign out")
         }
       })
       .catch((error) => {
-        Alert.alert("Failed to log out")
         console.error(error);
       });
   }
 
 
   render() {
+    this.signout()
     return(
-      <View>
-        <Button
-          title="logout"
-          onPress={() => this.signout()}
-        />
-      </View>
+      null
     );
   }
 }
