@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Text, View, Button, FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View,  FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Button, Text, Card, CardItem, Thumbnail} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import User from './user';
@@ -36,6 +37,20 @@ class ProfileScreen extends Component {
           'X-Authorization': token
         }
     })
+    .then((response) => {
+      if(response.status === 401){
+        throw Error("Could not get info - please log in")
+      }
+      else if(response.status === 404){
+        throw Error("Could not find user - try another account")
+      }
+      else if(response.status === 500) {
+        throw Error("Error - please try again later")
+      }
+      else{
+        return response;
+      }
+    })
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({
@@ -55,28 +70,29 @@ class ProfileScreen extends Component {
     const navigator = this.props.navigation;
 
     return (
-      <View>
+      <View style={styles.screen}>
         <ScrollView>
           <User userData={this.state.user} />
 
-          <Button
-            title="Edit Profile"
-            onPress={() => navigator.navigate('EditUser', {userData: this.state.user})}
-          />
+          <Button primary block rounded onPress={() => navigator.navigate('EditUser', {userData: this.state.user})}>
+            <Text> Edit Profile</Text>
+          </Button>
 
           <TextInput
             style={styles.title}
             defaultValue="Reviews"
             editable={false}
           />
-          <MyReviews reviewData={this.state.reviews} />
+          <MyReviews reviewData={this.state.reviews} navigation={this.props.navigation} />
 
           <TextInput
             style={styles.title}
             defaultValue="Liked Reviews"
             editable={false}
           />
-          <Reviews reviewData={this.state.liked_reviews}/>
+          <Card>
+            <Reviews reviewData={this.state.liked_reviews}/>
+          </Card>
 
           <TextInput
             style={styles.title}
@@ -84,24 +100,31 @@ class ProfileScreen extends Component {
             editable={false}
           />
 
-            <FlatList
-              data={this.state.favourite_locations}
-              renderItem={({item}) =>
-              <View>
-                <TouchableOpacity onPress={() => navigator.navigate('LocationScreen', {locId: item.location_id})}>
+          <FlatList style={{flex: 1}}
+            data={this.state.favourite_locations}
+            renderItem={({item}) =>
+            <View>
+              <TouchableOpacity onPress={() => navigator.navigate('LocationScreen', {locId: item.location_id})}>
+              <Card>
+                <CardItem style={styles.image}>
                   <Icon
                     name='heart'
                     color= 'red'
-                    size={60}
+                    size={50}
                   />
+                </CardItem>
+                <CardItem>
+                  <Thumbnail source={{uri: item.photo_path}}/>
                   <Text style={{fontSize: 20}}> {item.location_name}</Text>
-                  <Text> {item.location_town}</Text>
-                  <Text> average rating: {item.avg_overall_rating} </Text>
-                </TouchableOpacity>
-              </View>
-              }
-              keyExtractor={({location_id}) => location_id.toString()}
-            />
+                </CardItem>
+                <Text> {item.location_town}</Text>
+                <Text> Overall Rating: {item.avg_overall_rating} </Text>
+              </Card>
+              </TouchableOpacity>
+            </View>
+            }
+            keyExtractor={({location_id}) => location_id.toString()}
+          />
 
         </ScrollView>
       </View>
@@ -111,6 +134,9 @@ class ProfileScreen extends Component {
 }
 
 const styles=StyleSheet.create({
+  screen: {
+    flex: 1
+  },
   title: {
     color: 'black',
     fontSize: 20
@@ -123,6 +149,11 @@ const styles=StyleSheet.create({
 
   button: {
     marginTop: 6
+  },
+
+  image: {
+    alignSelf: 'flex-end',
+    margin: 10
   }
 })
 

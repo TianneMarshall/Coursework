@@ -14,6 +14,8 @@ import LocationScreen from './components/locationscreen';
 import EditProfileScreen from './components/editprofilescreen';
 import WriteReviewScreen from './components/writeReviewScreen';
 import MyLocation from './components/myLocation';
+import EditReviewScreen from './components/editReviewScreen';
+import MyReviews from './components/myReviews';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -24,6 +26,8 @@ function UserNav() {
     <UserStack.Navigator>
       <UserStack.Screen name="Profile" component={ProfileScreen} />
       <UserStack.Screen name="EditUser" component={EditProfileScreen} />
+      <UserStack.Screen name="MyReviews" component={MyReviews} />
+      <UserStack.Screen name="EditReview" component={EditReviewScreen} />
       <UserStack.Screen name="LocationScreen" component={LocationScreen} />
     </UserStack.Navigator>
   );
