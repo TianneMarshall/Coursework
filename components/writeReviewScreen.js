@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import { StyleSheet, TextInput, ScrollView } from 'react-native';
 import { Button, Text, View, Form, Textarea } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
@@ -100,6 +100,7 @@ class WriteReviewScreen extends Component {
   render() {
     return(
       <View style={styles.review}>
+        <ScrollView>
           <View style={styles.rating}>
             <TextInput
               defaultValue="Quality"
@@ -113,7 +114,6 @@ class WriteReviewScreen extends Component {
               fullStar={<Icon name="star" size={40} color='gold'/>}
               emptyStar={<Icon name="star-o" size={40} color='gold'/>}
             />
-
           </View>
 
           <View style={styles.rating}>
@@ -172,7 +172,7 @@ class WriteReviewScreen extends Component {
           <Button primary rounded style={styles.button} onPress={() => this.validityCheck()}>
             <Text>Post Review</Text>
           </Button>
-
+        </ScrollView>
       </View>
     );
   }
