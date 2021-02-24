@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { Alert, FlatList, PermissionsAndroid, StyleSheet, Text, View } from 'react-native';
+import { FlatList, PermissionsAndroid, StyleSheet, View } from 'react-native';
+import { Text, Card, CardItem, Thumbnail } from 'native-base'
 import Geolocation from 'react-native-geolocation-service';
 import PropTypes from 'prop-types';
-import {getDistance} from 'geolib';
+import {getDistance, orderByDistance} from 'geolib';
 
 async function requestLocationPermission() {
   try{
@@ -46,53 +47,60 @@ class MyLocation extends Component {
     this.findCoordinates();
   }
 
-  calculateDistances = () => {
-    const {locations} = this.props.route.params;
-    return(
-      <View>
-          <Text> Longitude: {this.state.location.longitude} </Text>
-          <Text> Latitude: {this.state.location.latitude} </Text>
-          <FlatList
-            data={locations}
-            renderItem={({item}) =>
-                  <View style={styles.location}>
-                    <Text> Distance: {this.calc(item.latitude, item.longitude)} </Text>
-                    <Text style={{fontSize: 20}}>{item.location_name}</Text>
-                  </View>
-            }
-            keyExtractor={({location_id}) => location_id.toString()}
-          />
-      </View>
-    );
-  }
-
   calculateDistance = () => {
-      const {locations} = this.props.route.params;
-      const myLocation = this.state.location;
+    const navigator = this.props.navigation
+    const {locations} = this.props.route.params;
+    const myLocation = this.state.location;
 
-      locations.map((location) => this.calc(location.latitude, location.longitude))
-      return(
-        <Text>
-          {locations.map((location) => getDistance(
-          {latitude: myLocation.latitude, longitude: myLocation.longitude},
-          {latitude: location.latitude, longitude:location.longitude}
-        ))}
-        </Text>
-      );
-      
-      
+    // Testing dataset of locations with different latitudes and longitudes and test sorting method
+    const loc = {}; 
+    loc.location_id = 64; loc.location_name = "Costa Coffee"; loc.latitude = 96; loc.longitude = 52; 
+    locations.push(loc)
+
+    const loc2 = {}; 
+    loc2.location_id = 66; loc2.location_name = "Greggs"; loc2.latitude = 79; loc2.longitude = 0; 
+    locations.push(loc2)
+
+    const loc3 = {}; 
+    loc3.location_id = 67; loc3.location_name = "Cafe Nero"; loc3.latitude = 74; loc3.longitude = 1; 
+    locations.push(loc3)
+
+    // sort the venues in ascending order of their distance from the device's location
+    const sortedLocs = orderByDistance({latitude: myLocation.latitude, longitude: myLocation.longitude}, locations)
+
+    return(
+      <FlatList
+        data={sortedLocs}
+        renderItem={({item}) =>
+          <Card bordered>
+            <CardItem button style={styles.card} onPress={() => navigator.navigate('LocationScreen', {locId: item.location_id})}>
+              <Thumbnail source={{uri: item.photo_path}} />
+              <Text>{item.location_name}</Text>
+            </CardItem>
+            <CardItem>
+              <Text>{this.calc(item.latitude, item.longitude)} Miles Away</Text>
+              <Text>{item.location_town}</Text>
+            </CardItem>
+            <CardItem>
+              <Text>Overall Rating: {item.avg_overall_rating}</Text>
+            </CardItem>
+          </Card>
+        }
+        keyExtractor={({location_id}) => location_id.toString()}
+      />
+    )
   }
 
   calc(latitude, longitude) {
     const myLocation = this.state.location;
-    console.log("Latitude: ", latitude)
-    console.log("Longitude: ", longitude)
-    const distance = getDistance(
-        {latitude: myLocation.latitude, longitude: myLocation.longitude},
-        {latitude, longitude}
-      )
-      console.log(distance.toString());
-    return <Text> {distance}</Text>
+
+    const distance = getDistance
+    (
+      {latitude: myLocation.latitude, longitude: myLocation.longitude},
+      {latitude, longitude}
+    )
+
+   return(distance / 1000)
   }
 
   findCoordinates() {
@@ -103,7 +111,6 @@ class MyLocation extends Component {
     Geolocation.getCurrentPosition(
       (position) => {
         const location = position;
-        console.log("LOCATION 1: ", location.coords)
 
         this.setState({ 
           location: {
@@ -114,7 +121,7 @@ class MyLocation extends Component {
         });
       },
       (error) => {
-        Alert.alert(error.message)
+        throw Error(error.message)
       },
       {
         enableHighAccuracy: true,
@@ -151,13 +158,26 @@ const styles = StyleSheet.create({
     margin: 8,
     padding: 7
   },
-});
+  screen: {
+    flex: 1,
+    margin: 8
+  },
+  button: {
+    alignSelf: 'center',
+    margin: 10
+  },
+  card: {
+    borderBottomWidth: 2,
+    borderColor: '#bf80ff',
+  }
+
+})
 
 MyLocation.propTypes = {
-    navigation: PropTypes.shape({
-        navigate: PropTypes.func.isRequired
-    }).isRequired,
-    route: PropTypes.instanceOf(Object).isRequired
+  navigation: PropTypes.shape({
+      navigate: PropTypes.func.isRequired
+  }).isRequired,
+  route: PropTypes.instanceOf(Object).isRequired
 }
 
 export default MyLocation;
