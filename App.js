@@ -40,7 +40,6 @@ function HomeNav() {
       <Stack.Screen name="Home" options={{headerShown: false}} component={Homescreen} />
       <Stack.Screen name="MyLocation" component={MyLocation}/>
       <Stack.Screen name="LocationScreen" component={LocationScreen} />
-      <Stack.Screen name="Location" component={Location} />
       <Stack.Screen name="WriteReviewScreen" component={WriteReviewScreen} />
     </Stack.Navigator>
   );

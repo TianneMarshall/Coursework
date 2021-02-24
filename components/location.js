@@ -15,7 +15,7 @@ function Location (props) {
 
       <Image
         source={{uri: location.photo_path}}
-        style={{width: 200, height: 150}}
+        style={styles.image}
       />
 
       <Text> {location.location_town} </Text>
@@ -32,10 +32,6 @@ const styles=StyleSheet.create({
     flex: 1,
     margin: 6
   },
-  inputBox: {
-    borderColor: 'blue',
-    borderWidth: 4,
-  },
   title: {
     alignItems: 'center'
   },
@@ -43,10 +39,10 @@ const styles=StyleSheet.create({
     color: 'black',
     fontSize: 30,
   },
-  rating: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
+  image: {
+    width: 200,
+    height: 150
+  }
 });
 
 Location.propTypes = {
