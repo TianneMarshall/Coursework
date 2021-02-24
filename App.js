@@ -16,6 +16,7 @@ import WriteReviewScreen from './components/writeReviewScreen';
 import MyLocation from './components/myLocation';
 import EditReviewScreen from './components/editReviewScreen';
 import MyReviews from './components/myReviews';
+import Camera from './components/Camera';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -40,7 +41,6 @@ function HomeNav() {
       <Stack.Screen name="MyLocation" component={MyLocation}/>
       <Stack.Screen name="LocationScreen" component={LocationScreen} />
       <Stack.Screen name="Location" component={Location} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="WriteReviewScreen" component={WriteReviewScreen} />
     </Stack.Navigator>
   );
@@ -63,6 +63,7 @@ function App () {
         <Tab.Screen name="Sign In" component={LoginNav} />
         <Tab.Screen name="Home" component={HomeNav} />
         <Tab.Screen name="Profile" component={UserNav} />
+        <Tab.Screen name="Camera" component={Camera}/>
         <Tab.Screen name="Sign out" component={LogoutScreen} />
       </Tab.Navigator>
     </NavigationContainer>

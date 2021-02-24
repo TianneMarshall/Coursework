@@ -18,11 +18,11 @@ class Camera extends Component{
         }
     }
 
-    componentDidMount(){
-      this.unsubscribe = this.props.navigation.addListener('focus', () => {
-        this.getParam();
-      })
-    }
+  componentDidMount(){
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.getParam();
+    })
+  }
 
   componentWillUnmount(){
     this.unsubscribe()
@@ -38,51 +38,51 @@ class Camera extends Component{
   }
 
   takePicture = async() => {
-      const token = await AsyncStorage.getItem('@session_token');
-      const locationId = this.state.location_id.toString();
-      const reviewId = this.state.review_id.toString();
+    const token = await AsyncStorage.getItem('@session_token');
+    const locationId = this.state.location_id.toString();
+    const reviewId = this.state.review_id.toString();
 
-      console.log("Location: ", locationId)
-      console.log("Review: ", reviewId)
-  
-      if(this.camera){
-        const options = {quality: 0.5, base64: true}
-        const data = await this.camera.takePictureAsync(options);
-  
-        return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  locationId  }/review/${  reviewId  }/photo`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'image/jpeg',
-            'X-Authorization': token
-          },
-          body: data.toString()
-        })
-        .then((response) => {
-          if(response.status === 200){
-            Toast.show("Uploaded photo!");
-          }
-          else if(response.status === 400) {
-            throw Error("Invalid photo type - try another photo");
-          }
-          else if(response.status === 401) {
-            throw Error("Error - User did not post this review");
-          }
-          else if(response.status === 404) {
-            throw Error("Cannot find review - try another");
-          }
-          else if(response.status === 500) {
-            throw Error("Error - try again later");
-          }
-          else{
-              throw Error("Error failed")
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-      }
+    console.log("Location: ", locationId)
+    console.log("Review: ", reviewId)
+
+    if(this.camera){
+      const options = {quality: 0.5, base64: true}
+      const data = await this.camera.takePictureAsync(options);
+
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  locationId  }/review/${  reviewId  }/photo`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'image/jpeg',
+          'X-Authorization': token
+        },
+        body: data.toString()
+      })
+      .then((response) => {
+        if(response.status === 200){
+          Toast.show("Uploaded photo!");
+        }
+        else if(response.status === 400) {
+          throw Error("Invalid photo type - try another photo");
+        }
+        else if(response.status === 401) {
+          throw Error("Error - User did not post this review");
+        }
+        else if(response.status === 404) {
+          throw Error("Cannot find review - try another");
+        }
+        else if(response.status === 500) {
+          throw Error("Error - try again later");
+        }
+        else{
+          throw Error("Error failed")
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      })
     }
+  }
 
   render(){
     const navigator = this.props.navigation
@@ -142,12 +142,12 @@ const styles = StyleSheet.create({
 });
 
 Camera.propTypes = {
-    navigation: PropTypes.shape({
-        navigate: PropTypes.func.isRequired,
-        addListener: PropTypes.func.isRequired
-    }).isRequired,
-    route: PropTypes.instanceOf(Object).isRequired,
-    reviewData: PropTypes.instanceOf(Object).isRequired
-  }
+  navigation: PropTypes.shape({
+      navigate: PropTypes.func.isRequired,
+      addListener: PropTypes.func.isRequired
+  }).isRequired,
+  route: PropTypes.instanceOf(Object).isRequired,
+  reviewData: PropTypes.instanceOf(Object).isRequired
+}
 
 export default Camera;
