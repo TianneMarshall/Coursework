@@ -80,7 +80,7 @@ class Homescreen extends Component {
             {/* Button to search for venues by the user's device location */}
             <Icon style={styles.button}
               name='map-pin' color='#cc99ff' size={28}
-              onPress={() => navigator.navigate('MyLocation', {locations: this.state.locations})}
+              onPress={() => navigator.navigate('Nearby Locations', {locations: this.state.locations})}
             />
           </Item>
         </Header>

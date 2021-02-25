@@ -38,7 +38,7 @@ function HomeNav() {
   return(
     <Stack.Navigator>
       <Stack.Screen name="Home" options={{headerShown: false}} component={Homescreen} />
-      <Stack.Screen name="MyLocation" component={MyLocation}/>
+      <Stack.Screen name="Nearby Locations" component={MyLocation}/>
       <Stack.Screen name="Location Info" component={LocationScreen} />
       <Stack.Screen name="Write Review" component={WriteReviewScreen} />
     </Stack.Navigator>
@@ -61,7 +61,7 @@ function App () {
         <Tab.Screen name="Sign In" component={LoginNav} />
         <Tab.Screen name="Home" component={HomeNav} />
         <Tab.Screen name="Profile" component={UserNav} />
-        <Tab.Screen name="Sign out" component={LogoutScreen} />
+        <Tab.Screen name="Settings" component={LogoutScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
