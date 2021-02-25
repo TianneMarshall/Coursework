@@ -55,7 +55,7 @@ class Camera extends Component{
           'Content-Type': 'image/jpeg',
           'X-Authorization': token
         },
-        body: data.toString()
+        body: data
       })
       .then((response) => {
         if(response.status === 200){
