@@ -27,18 +27,18 @@ class WriteReviewScreen extends Component {
 
     return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  location_id  }/review`,
     {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': token
-        },
-        body: JSON.stringify({
-          overall_rating:  parseInt(this.state.overall_rating),
-          price_rating: parseInt(this.state.price_rating),
-          quality_rating: parseInt(this.state.quality_rating),
-          clenliness_rating: parseInt(this.state.clenliness_rating),
-          review_body:  this.state.review_body
-        })
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': token
+      },
+      body: JSON.stringify({
+        overall_rating:  parseInt(this.state.overall_rating),
+        price_rating: parseInt(this.state.price_rating),
+        quality_rating: parseInt(this.state.quality_rating),
+        clenliness_rating: parseInt(this.state.clenliness_rating),
+        review_body:  this.state.review_body
+      })
     })
     .then((response) => {
       if(response.status === 201) {
@@ -62,6 +62,7 @@ class WriteReviewScreen extends Component {
     })
   }
 
+  // if the user does not enter a rating then convert the ratings value to zero to allow zero star rating
   validityCheck() {
     if(!this.state.overall_rating) {
       this.setState({overall_rating: 0})
@@ -80,9 +81,11 @@ class WriteReviewScreen extends Component {
 
   profanityCheck() {
     const body = this.state.review_body.toLowerCase();
+    // validation - throw error if the user tries to post review without review body
     if(!body) {
       console.error("Must write review body");
     }
+    // check for banned words in the review body and throw error if found
     else if(body.includes("cake")){
       console.error("Error must not review cakes");
     }
@@ -92,6 +95,7 @@ class WriteReviewScreen extends Component {
     else if(body.includes("pastry") || body.includes("pastries")){
       console.error("Error must not review pastries");
     }
+    // if the review body is valid then execute post request
     else{
       this.postReview();
     }
@@ -181,15 +185,14 @@ class WriteReviewScreen extends Component {
 const styles = StyleSheet.create({
   review: {
     flex: 1,
+    marginTop: 20,
     justifyContent: 'center'
   },
-
   rating: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
   },
-
   revBody: {
     alignSelf: 'center',
     borderColor: '#bf80ff',

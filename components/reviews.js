@@ -12,7 +12,6 @@ function Reviews (props) {
       <FlatList
         data={review}
         renderItem={({item}) =>
-
           <Review reviewData={item.review} reviewLocId={item.location.location_id}/>
         }
       />

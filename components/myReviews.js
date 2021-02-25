@@ -57,9 +57,16 @@ class MyReviews extends Component {
     })
   }
 
+  delete(item) {
+    this.setState({
+      review_id: item.review.review_id,
+      location_id: item.location.location_id
+    })
+    this.deleteReview()
+  }
+
   render() {
 
-    const navigation = this.props.navigation;
     const review = this.props.reviewData;
     
     return(
@@ -72,6 +79,7 @@ class MyReviews extends Component {
                 <Review reviewData={item.review} reviewLocId={item.location.location_id}/>
                 <CardItem style={styles.buttons}>
                   <View style={styles.photoButton}>
+                    {/* Open the camera to take photo for review when button is pressed */}
                     <Button
                       style={{backgroundColor: '#cc99ff'}}
                       onPress={() => this.props.navigation.navigate('Camera', {reviewData: item})}>
@@ -86,10 +94,10 @@ class MyReviews extends Component {
                 </CardItem>
               </Card>
 
+              {/* Delete review when button is pressed */}
               <TouchableOpacity
                 style={styles.delete}
-                onPressIn={() => this.setState({review_id: item.review.review_id, location_id: item.location.location_id})}
-                onPress={() => this.deleteReview()}>
+                onPress={() => this.delete(item)}>
                 <Icon
                   name="trash-o"
                   size={30}
@@ -107,16 +115,7 @@ const styles = StyleSheet.create({
   reviews: {
     flex: 1
   },
-  camera: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'black'
-  },
   delete: {
-    alignItems: 'center'
-  },
-  preview: {
-    flex: 1,
     alignItems: 'center'
   },
   buttons: {

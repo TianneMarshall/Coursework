@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-simple-toast';
@@ -15,53 +15,6 @@ class Review extends Component {
       liked: false,
       thumb: 'thumbs-o-up'
     }
-  }
-
-  componentDidMount() {
-    this.getPhoto()
-  }
-
-  getPhoto = async () => {
-    const token = await AsyncStorage.getItem('@session_token');
-    const loc_id = this.props.reviewLocId.toString();
-    const review = this.props.reviewData;
-    const rev_id = review.review_id.toString();
-
-    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  loc_id  }/review/${  rev_id  }/photo`,
-    {
-      headers: {
-        'Content-Type': 'image/jpeg',
-        'X-Authorization': token
-      }
-    })
-    .then((response) => {
-      if(response.status === 404){
-        throw Error('Error could not find photo or image')
-      }
-      else if(response.status === 500){
-        throw Error('Error - please try again later')
-      }
-      else if(response.status === 200){
-        return response
-      }
-    })
-    .then((response) => response.blob())
-    .then(async(responseBlob) => {
-      console.log(JSON.stringify(responseBlob))
-      const imageURL = URL.createObjectURL(responseBlob) 
-      console.log("imageURL", imageURL)
-      await AsyncStorage.setItem('@image', JSON.stringify(responseBlob));
-    })
-    .then(async() => {
-      const image = await AsyncStorage.getItem('@image')
-      return(
-        <Image
-          source={{uri: JSON.parse(image)}}
-          style={{width: 200, height: 150}}
-        />
-      )
-    })
-
   }
 
   like = async () => {
@@ -81,6 +34,7 @@ class Review extends Component {
     })
     .then((response) => {
       if(response.status === 200){
+        // change the like icon to show review has been liked
         this.setState({
           liked: true,
           thumb: 'thumbs-up'
@@ -119,11 +73,12 @@ class Review extends Component {
     })
     .then((response) => {
       if(response.status === 200){
+        // change the like icon to show the user has removed like from review
         this.setState({
           liked: false,
           thumb: "thumbs-o-up"
         });
-        Toast.show('Unliked!', Toast.LONG);
+        Toast.show('Unliked!');
       }
       else if(response.status === 401) {
         throw Error("Could not unlike");
@@ -141,6 +96,7 @@ class Review extends Component {
   }
 
   checkLike(){
+    // determine whether to execute post like request or delete like request
     if(this.state.liked === false) {
       this.like();
     }
@@ -167,6 +123,7 @@ class Review extends Component {
             defaultValue="Overall"
             editable={false}
           />
+          {/* pass rating number to ratings component to display the correct number of stars */}
           <Ratings reviewData={review.overall_rating} />
         </View>
 
@@ -204,8 +161,6 @@ class Review extends Component {
 const styles = StyleSheet.create({
   review: {
     flex: 1,
-    marginRight: 15,
-    marginLeft: 15,
     padding: 15
   },
 

@@ -19,11 +19,9 @@ async function requestLocationPermission() {
       },
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED){
-      console.log("You can access location");
       return true;
     }
     else {
-      console.log("Location permission denied");
       return false;
     }
   }
@@ -52,7 +50,7 @@ class MyLocation extends Component {
     const {locations} = this.props.route.params;
     const myLocation = this.state.location;
 
-    // Testing dataset of locations with different latitudes and longitudes and test sorting method
+    // Testing dataset of locations with different latitudes and longitudes to test sorting method
     const loc = {}; 
     loc.location_id = 64; loc.location_name = "Costa Coffee"; loc.latitude = 96; loc.longitude = 52; 
     locations.push(loc)
@@ -73,12 +71,16 @@ class MyLocation extends Component {
         data={sortedLocs}
         renderItem={({item}) =>
           <Card bordered>
-            <CardItem button style={styles.card} onPress={() => navigator.navigate('LocationScreen', {locId: item.location_id})}>
+            {/* Load individual location information when the location is pressed */}
+            <CardItem button style={styles.card} onPress={() => navigator.navigate('Location Info', {locId: item.location_id})}>
               <Thumbnail source={{uri: item.photo_path}} />
               <Text>{item.location_name}</Text>
             </CardItem>
             <CardItem>
+              {/* Calculate the distance between location and the user's current location */}
               <Text>{this.calc(item.latitude, item.longitude)} Miles Away</Text>
+            </CardItem>
+            <CardItem>
               <Text>{item.location_town}</Text>
             </CardItem>
             <CardItem>
@@ -94,20 +96,24 @@ class MyLocation extends Component {
   calc(latitude, longitude) {
     const myLocation = this.state.location;
 
+    // calculate the distance between the user's current location and the coffee venue
     const distance = getDistance
     (
       {latitude: myLocation.latitude, longitude: myLocation.longitude},
       {latitude, longitude}
     )
 
-   return(distance / 1000)
+    // divide the distance by 1000 to convert from meters to miles  
+    return(distance / 1000)
   }
 
   findCoordinates() {
+    // determine whether app has permission to access the user's location
     if(!this.state.locationPermission){
       this.state.locationPermission = requestLocationPermission();
     }
 
+    // get the user's current location (latitude and longitude) and store in the state
     Geolocation.getCurrentPosition(
       (position) => {
         const location = position;
@@ -129,7 +135,6 @@ class MyLocation extends Component {
         maximumAge: 1000
       }
     ); 
-
   };
 
   render() {
@@ -137,7 +142,7 @@ class MyLocation extends Component {
     if(this.state.isLoading){
       return(
         <View>
-            <Text>Loading...</Text>
+          <Text>Loading...</Text>
         </View>
       );
     }
@@ -145,32 +150,14 @@ class MyLocation extends Component {
     return(
       this.calculateDistance() 
     );
-   
   }
 }
 
 const styles = StyleSheet.create({
-
-  location: {
-    flex: 1,
-    borderColor: 'blue',
-    borderWidth: 4,
-    margin: 8,
-    padding: 7
-  },
-  screen: {
-    flex: 1,
-    margin: 8
-  },
-  button: {
-    alignSelf: 'center',
-    margin: 10
-  },
   card: {
     borderBottomWidth: 2,
     borderColor: '#bf80ff',
   }
-
 })
 
 MyLocation.propTypes = {

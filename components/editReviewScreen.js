@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import { StyleSheet, TextInput, ScrollView } from 'react-native';
 import { Button, Text, View, Form, Textarea } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
@@ -29,6 +29,7 @@ class editReviewScreen extends Component {
     }
   }
 
+  // load the original review information and store in the state when the screen loads
   componentDidMount() {
     this.getOriginalData()
   }
@@ -36,7 +37,7 @@ class editReviewScreen extends Component {
   getOriginalData() {
     const review = this.props.route.params.reviewData;
     const locationId = this.props.route.params.reviewLocId;
-    console.log(locationId)
+    
     this.setState({
       rev_id: review.review_id.toString(),
       loc_id: locationId,
@@ -55,13 +56,11 @@ class editReviewScreen extends Component {
   }
 
   editReview = async (newInfo) => {
-    const location_id = this.state.loc_id;
     const token = await AsyncStorage.getItem('@session_token');
+    const location_id = this.state.loc_id;
     const review_id = this.state.rev_id;
-
-    console.log(review_id, location_id)
     
-    return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ location_id + "/review/" + review_id,
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${ location_id  }/review/${  review_id}`,
     {
       method: 'PATCH',
       headers: {
@@ -101,6 +100,7 @@ class editReviewScreen extends Component {
   checkChanges() {
     const newInfo = {};
   
+    // if the review information has changed then add the new information into a list for patch request
     if (this.state.updatedOverall !== this.state.originalOverall){
       newInfo.overall_rating = parseInt(this.state.updatedOverall);
     }
@@ -119,40 +119,42 @@ class editReviewScreen extends Component {
     if(this.state.updatedBody !== this.state.originalBody){
       newInfo.review_body = this.state.updatedBody;
     }
-    console.log(newInfo)
     this.editReview(newInfo)
   }
 
   profanityCheck() {
     const body = this.state.updatedBody.toLowerCase();
+    // validation - throw error if the user tries to post review without review body
     if(!body) {
       console.error("Must write review body");
     }
+    // check for banned words in the review body and throw error if found
     else if(body.includes("cake")){
-        console.error("Error must not review cakes");
-      }
-      else if(body.includes("tea")){
-        console.error("Error must not review tea");
-      }
-      else if(body.includes("pastry") || body.includes("pastries")){
-        console.error("Error must not review pastries");
-      }
-      else{
-        this.checkChanges();
-      }
+      console.error("Error must not review cakes");
+    }
+    else if(body.includes("tea")){
+      console.error("Error must not review tea");
+    }
+    else if(body.includes("pastry") || body.includes("pastries")){
+      console.error("Error must not review pastries");
+    }
+    // otherwise check for updated information for the patch request
+    else{
+      this.checkChanges();
+    }
   }
 
   render() {
 
     return(
       <View style={styles.review}>
-
-        <View style={styles.rating}>
+        <ScrollView>
+          <View style={styles.rating}>
             <TextInput
               defaultValue="Overall"
               editable={false}
             />
-             <Stars
+            <Stars
               rating={this.state.originalOverall}
               count={5}
               half
@@ -165,12 +167,11 @@ class editReviewScreen extends Component {
           </View>
 
           <View style={styles.rating}>
-            
             <TextInput
               defaultValue="Quality"
               editable={false}
             />
-             <Stars
+            <Stars
               rating={this.state.originalQuality}
               count={5}
               half
@@ -187,7 +188,7 @@ class editReviewScreen extends Component {
               defaultValue="Price"
               editable={false}
             />
-             <Stars
+            <Stars
               rating={this.state.originalPrice}
               count={5}
               half
@@ -204,7 +205,7 @@ class editReviewScreen extends Component {
               defaultValue="Cleanliness"
               editable={false}
             />
-             <Stars
+            <Stars
               rating={this.state.originalCleanliness}
               count={5}
               half
@@ -226,6 +227,7 @@ class editReviewScreen extends Component {
           <Button primary rounded style={styles.button} onPress={() => this.profanityCheck()}>
             <Text>Update Review</Text>
           </Button>
+        </ScrollView>
       </View>
     );
   }
@@ -233,6 +235,7 @@ class editReviewScreen extends Component {
 const styles = StyleSheet.create({
   review: {
     flex: 1,
+    marginTop: 20,
     justifyContent: 'center'
   },
 

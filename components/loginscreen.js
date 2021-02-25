@@ -28,7 +28,7 @@ class LoginScreen extends Component{
     })
     .then((response) => {
       if(response.status === 200) {
-        Toast.show("Successfully signed in!", Toast.LONG);
+        Toast.show("Successfully signed in!");
         return response.json()
       }
       if(response.status === 400){
@@ -42,6 +42,7 @@ class LoginScreen extends Component{
       }
     })
     .then(async(responseJson) => {
+      // store the unique token for the user's session and the user's id
       await AsyncStorage.setItem('@session_token', responseJson.token);
       await AsyncStorage.setItem('@user_id', responseJson.id.toString());
       this.props.navigation.navigate("Home");
@@ -76,10 +77,12 @@ class LoginScreen extends Component{
             />
           </Item>
         </Form>
+        {/* Execute the sign in request when the button is pressed */}
         <Button info block rounded onPress={() => this.signin()} style={styles.button}>
           <Text>Sign in</Text>
         </Button>
 
+        {/* Navigate the register screen for new users when the button is pressed */}
         <Button primary block rounded onPress={() => navigator.navigate('Register')} style={styles.button}>
           <Text>Register</Text>
         </Button>

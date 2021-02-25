@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, Text, Card } from 'native-base'
 import Toast from 'react-native-simple-toast';
@@ -18,7 +18,8 @@ class LocationScreen extends Component{
       location_id: '',
       location: [],
       reviews: [],
-      favourited: false
+      favourited: false,
+      iconName: 'heart-o'
     }
   }
 
@@ -60,103 +61,107 @@ class LocationScreen extends Component{
     const token = await AsyncStorage.getItem('@session_token');
     const locId = this.state.location_id.toString();
 
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  locId  }/favourite`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': token
-        }
-      })
-      .then((response) => {
-        if(response.status === 200) {
-          this.setState({
-            favourited: true
-          });
-          Toast.show('Favourited!');
-        }
-        else if(response.status === 400){
-          console.error("Error - please try again later")
-        }
-        else if(response.status === 401) {
-          console.error("Could not favourite - Please sign in");
-        }
-        else if(response.status === 404) {
-          console.error("Could not find location - try another");
-        }
-        else if(response.status === 500){
-          console.error("Error please try again later")
-        }
-        else{
-          console.error("Error");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-    }
-
-    unfavourite = async () => {
-
-      const token = await AsyncStorage.getItem('@session_token');
-      const locId = this.state.location_id.toString();
-
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  locId  }/favourite`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': token
-        }
-      })
-      .then((response) => {
-        if(response.status === 200){
-          this.setState({
-            favourited: false
-          });
-          Toast.show("Unfavourited!");
-        }
-        else if(response.status === 401) {
-          console.error("Could not unfavourite - Please sign in");
-        }
-        else if(response.status === 403){
-          console.error("Error - location is not in favourites")
-        }
-        else if(response.status === 404) {
-          console.error("Could not find location - try another");
-        }
-        else if(response.status === 500){
-          console.error("Error - Please try again later")
-        }
-        else{
-          console.error("Error");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-    }
-
-    checkFavourite(){
-      if(this.state.favourited === false) {
-        this.favourite();
-  
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  locId  }/favourite`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': token
       }
-      else if(this.state.favourited === true){
-        this.unfavourite();
+    })
+    .then((response) => {
+      if(response.status === 200) {
+        // change the heart icon to show location has been favourited
+        this.setState({
+          favourited: true,
+          iconName: 'heart'
+        });
+        Toast.show('Favourited!');
       }
+      else if(response.status === 400){
+        console.error("Error - please try again later")
+      }
+      else if(response.status === 401) {
+        console.error("Could not favourite - Please sign in");
+      }
+      else if(response.status === 404) {
+        console.error("Could not find location - try another");
+      }
+      else if(response.status === 500){
+        console.error("Error please try again later")
+      }
+      else{
+        console.error("Error");
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+  }
+
+  unfavourite = async () => {
+
+    const token = await AsyncStorage.getItem('@session_token');
+    const locId = this.state.location_id.toString();
+
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${  locId  }/favourite`,
+    {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': token
+      }
+    })
+    .then((response) => {
+      if(response.status === 200){
+        // change the heart icon to show location has been removed from favourites
+        this.setState({
+          favourited: false,
+          iconName: 'heart-o'
+        });
+        Toast.show("Unfavourited!");
+      }
+      else if(response.status === 401) {
+        console.error("Could not unfavourite - Please sign in");
+      }
+      else if(response.status === 403){
+        console.error("Error - location is not in favourites")
+      }
+      else if(response.status === 404) {
+        console.error("Could not find location - try another");
+      }
+      else if(response.status === 500){
+        console.error("Error - Please try again later")
+      }
+      else{
+        console.error("Error");
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+  }
+
+  checkFavourite(){
+    // determine whether to execute post favourite request or delete favourite request
+    if(this.state.favourited === false) {
+      this.favourite();
     }
+    else if(this.state.favourited === true){
+      this.unfavourite();
+    }
+  }
 
   render() {
     const navigator = this.props.navigation;
-    const icon = this.state.favourited ? 'heart' : 'heart-o';
 
     return(
       <View style={styles.location}>
         <ScrollView>
+          {/* check which request to execute when heart button is pressed */}
           <TouchableOpacity style={styles.image} onPress={() => this.checkFavourite()}>
             <Icon
-              name={icon}
+              name={this.state.iconName}
               color='red'
               size={60}
             />
@@ -164,22 +169,22 @@ class LocationScreen extends Component{
 
           <Location locationData={this.state.location} />
 
-          <Button info block rounded onPress={() => navigator.navigate('WriteReviewScreen', {locId: this.state.location_id})}>
+          {/* Pass location id to write review screen in props */}
+          <Button info block rounded onPress={() => navigator.navigate('Write Review', {locId: this.state.location_id})}>
             <Text>Write Review</Text>
           </Button>
 
-          <TextInput
-            style={styles.title}
-            defaultValue="Reviews"
-            editable={false}
-          />
-
+          <Text style={styles.title}>
+            Reviews
+          </Text>
+            
+          {/* Load location's reviews */}
           <FlatList
             data={this.state.reviews}
             renderItem={({item}) =>
-            <Card>
-              <Review reviewData={item} reviewLocId={this.state.location_id}/> 
-            </Card>
+              <Card>
+                <Review reviewData={item} reviewLocId={this.state.location_id}/> 
+              </Card>
             }
             keyExtractor={({review_id}) => review_id.toString()}
           />
@@ -195,17 +200,13 @@ const styles=StyleSheet.create({
 
   title: {
     color: 'black',
-    fontSize: 20
+    fontSize: 20,
+    margin: 10
   },
 
   image: {
     alignItems: 'flex-end',
-    margin: 10
-  },
-  
-  reviews: {
-    flex: 1,
-    margin: 10
+    margin: 20
   }
 })
 

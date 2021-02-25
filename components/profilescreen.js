@@ -21,6 +21,7 @@ class ProfileScreen extends Component {
     }
   }
 
+  // re-load the user information when the profile screen comes into focus
   componentDidMount(){
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.getUser();
@@ -38,10 +39,10 @@ class ProfileScreen extends Component {
 
     return fetch(`http://10.0.2.2:3333/api/1.0.0/user/${userid}`,
     {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': token
-        }
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': token
+      }
     })
     .then((response) => {
       if(response.status === 401){
@@ -53,6 +54,7 @@ class ProfileScreen extends Component {
       else if(response.status === 500) {
         throw Error("Error - please try again later")
       }
+      // if the request is successful, return the results
       else{
         return response;
       }
@@ -84,33 +86,26 @@ class ProfileScreen extends Component {
             <Text> Edit Profile</Text>
           </Button>
 
-          <TextInput
-            style={styles.title}
-            defaultValue="Reviews"
-            editable={false}
-          />
+          <Text style={styles.title}>My Reviews</Text>
+
+          {/* Load the reviews that the user has posted */}
           <MyReviews reviewData={this.state.reviews} navigation={this.props.navigation} />
 
-          <TextInput
-            style={styles.title}
-            defaultValue="Liked Reviews"
-            editable={false}
-          />
+          <Text style={styles.title}>Liked Reviews</Text>
+
+          {/* Load the reviews that the user has liked */}
           <Card>
             <Reviews reviewData={this.state.liked_reviews}/>
           </Card>
 
-          <TextInput
-            style={styles.title}
-            defaultValue="Favourite Locations"
-            editable={false}
-          />
+          <Text style={styles.title}>Favourite Locations</Text>
 
+          {/* Load the user's favourite locations */}
           <FlatList style={{flex: 1}}
             data={this.state.favourite_locations}
             renderItem={({item}) =>
             <View>
-              <TouchableOpacity onPress={() => navigator.navigate('LocationScreen', {locId: item.location_id})}>
+              <TouchableOpacity onPress={() => navigator.navigate('Location Info', {locId: item.location_id})}>
                 <Card style={styles.location}>
                   <CardItem style={styles.image}>
                     <Icon
@@ -152,7 +147,8 @@ const styles=StyleSheet.create({
 
   title: {
     color: 'black',
-    fontSize: 20
+    fontSize: 20,
+    margin: 10
   },
 
   item: {

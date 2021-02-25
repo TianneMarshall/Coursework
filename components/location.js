@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, Text, TextInput, View, StyleSheet } from 'react-native';
+import { Image, View, StyleSheet } from 'react-native';
+import { Text } from 'native-base';
 import PropTypes from 'prop-types';
 
 function Location (props) {
@@ -10,7 +11,7 @@ function Location (props) {
     <View style={styles.location}>
 
       <View style={styles.title}>
-        <TextInput style={styles.titles} editable={false}> {location.location_name} </TextInput>
+        <Text style={styles.titles}>{location.location_name}</Text>  
       </View>
 
       <Image
@@ -18,7 +19,7 @@ function Location (props) {
         style={styles.image}
       />
 
-      <Text> {location.location_town} </Text>
+      <Text style={styles.town}> {location.location_town} </Text>
       <Text> Overall Rating: {location.avg_overall_rating} </Text>
       <Text> Price: {location.avg_price_rating} </Text>
       <Text> Quality: {location.avg_quality_rating} </Text>
@@ -39,9 +40,15 @@ const styles=StyleSheet.create({
     color: 'black',
     fontSize: 30,
   },
+  town: {
+    fontSize: 20,
+    alignSelf: 'center',
+    margin: 20
+  },
   image: {
     width: 200,
-    height: 150
+    height: 150,
+    margin: 15
   }
 });
 

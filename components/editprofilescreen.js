@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {TextInput, View, Button, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import { Button, Text, Input, Form, Item} from 'native-base'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -14,13 +15,12 @@ class EditProfileScreen extends Component {
       originalLastName: '',
       originalEmail: '',
       originalPassword:'',
-      originalConPassword: '',
 
       updatedFirstName: '',
       updatedLastName: '',
       updatedEmail: '',
       updatedPassword: '',
-      updatedConPassword: ''
+      confirmPassword: ''
     };
   }
 
@@ -28,6 +28,7 @@ class EditProfileScreen extends Component {
     this.getOriginalData();
   }
 
+  // load user's original data into the state
   getOriginalData() {
     const user = this.props.route.params.userData;
 
@@ -36,12 +37,11 @@ class EditProfileScreen extends Component {
       originalLastName: user.last_name,
       originalEmail: user.email,
       originalPassword: user.password,
-      originalConPassword: user.password,
       updatedFirstName: user.first_name,
       updatedLastName: user.last_name,
       updatedEmail: user.email,
       updatedPassword: user.password,
-      updatedConPassword: user.password
+      confirmPassword: user.password
     });
   }
 
@@ -63,16 +63,16 @@ class EditProfileScreen extends Component {
         Toast.show('Saved Changes!');
       } 
       else if (response.status === 400) {
-        console.error('Error invalid details');
+        throw Error('Error invalid details');
       } 
       else if (response.status === 401) {
-        console.error('Could not update details - Please log in');
+        throw Error('Could not update details - Please log in');
       } 
       else if (response.status === 404) {
-        console.error('Error can not find user');
+        throw Error('Error can not find user');
       } 
       else {
-        console.error('Error - Please try again later');
+        throw Error('Error - Please try again later');
       }
     })
     .catch((error) => {
@@ -84,6 +84,7 @@ class EditProfileScreen extends Component {
     
     const newInfo = {};
   
+    // if the user's information has changed then add the new information into a list for patch request
     if (this.state.updatedFirstName !== this.state.originalFirstName){
       newInfo.first_name = this.state.updatedFirstName;
     }
@@ -96,81 +97,99 @@ class EditProfileScreen extends Component {
       newInfo.email = this.state.updatedEmail;
     }
 
+    // if the user's password has been updated then check if the re-entered password matches the new one for validation
     if (this.state.updatedPassword !== this.state.originalPassword){
-      if(this.state.updatedConPassword !== this.state.updatedPassword){
+      if(this.state.confirmPassword !== this.state.updatedPassword){
         throw Error("Passwords do not match, re-type password")
       }
       else{
         newInfo.password = this.state.updatedPassword;
       }
-      
     }
-      
     this.editUser(newInfo)
   }
 
   render() {
     return (
-      <View style={styles.screen}>
-        <Icon style={styles.image} name="user-circle" size={60} />
-        <TextInput
-          style={styles.textBox}
-          placeholder={this.state.originalFirstName}
-          onChangeText={(updatedFirstName) => this.setState({updatedFirstName})}
-          value={this.state.updatedFirstName}
-        />
-        <TextInput
-          style={styles.textBox}
-          placeholder={this.state.originalLastName}
-          onChangeText={(updatedLastName) => this.setState({updatedLastName})}
-          value={this.state.updatedLastName}
-        />
-        <TextInput
-          style={styles.textBox}
-          placeholder={this.state.originalEmail}
-          onChangeText={(updatedEmail) => this.setState({updatedEmail})}
-          value={this.state.updatedEmail}
-        />
-        <TextInput
-          style={styles.textBox}
-          secureTextEntry
-          placeholder="Enter new password.."
-          onChangeText={(updatedPassword) => this.setState({updatedPassword})}
-          value={this.state.updatedPassword}
-        />
-        <TextInput
-          style={styles.textBox}
-          secureTextEntry
-          placeholder="Confirm new password.."
-          onChangeText={(updatedConPassword) => this.setState({updatedConPassword})}
-        />
-        <Button title="Save Changes" onPress={() => this.checkChanges()} />
+      <View style={styles.form}>
+        <Form>
+          <Icon style={styles.image} name="user-circle" size={60} />
+          <Item>
+            <Input
+              regular
+              style={styles.field}
+              placeholder={this.state.originalFirstName}
+              onChangeText={(updatedFirstName) => this.setState({updatedFirstName})}
+              value={this.state.updatedFirstName}
+            />
+          </Item>
+          <Item>
+            <Input
+              regular
+              style={styles.field}
+              placeholder={this.state.originalLastName}
+              onChangeText={(updatedLastName) => this.setState({updatedLastName})}
+              value={this.state.updatedLastName}
+            />
+          </Item>
+          <Item>
+            <Input
+              regular
+              style={styles.field}
+              placeholder={this.state.originalEmail}
+              onChangeText={(updatedEmail) => this.setState({updatedEmail})}
+              value={this.state.updatedEmail}
+            />
+          </Item>
+          <Item>
+            <Input
+              regular
+              style={styles.field}
+              secureTextEntry
+              placeholder="Enter new password.."
+              onChangeText={(updatedPassword) => this.setState({updatedPassword})}
+              value={this.state.updatedPassword}
+            />
+          </Item>
+          <Item>
+            <Input
+              regular
+              style={styles.field}
+              secureTextEntry
+              placeholder="Confirm new password.."
+              onChangeText={(confirmPassword) => this.setState({confirmPassword})}
+            />
+          </Item>
+        </Form>
+        {/* review the updated information when button is pressed */}
+        <Button rounded onPress={() => this.checkChanges()} style={styles.button}>
+          <Text> Save Changes </Text>
+        </Button>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  form: {
     flex: 1,
-    alignItems: 'center',
+    margin: 10
   },
-  titles: {
-    fontSize: 20,
-    color: 'black',
-  },
-  textBox: {
-    width: 300,
-    borderColor: 'blue',
+  field: {
     borderWidth: 2,
-    margin: 4,
+    borderColor: 'blue',
     textAlign: 'center',
+    margin: 15
   },
   image: {
-    alignItems: 'center',
-    margin: 3,
+    alignSelf: 'center',
+    margin: 5,
     color: 'blue',
   },
+  button: {
+    alignSelf: 'center',
+    margin: 10
+  }
 });
 
 EditProfileScreen.propTypes = {

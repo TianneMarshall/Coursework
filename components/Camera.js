@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Alert, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Button, Text, Card, CardItem } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,14 +9,14 @@ import PropTypes from 'prop-types';
 
 class Camera extends Component{
 
-    constructor(props){
-        super(props)
-    
-        this.state={
-          location_id: '',
-          review_id: ''
-        }
+  constructor(props){
+    super(props)
+
+    this.state={
+      location_id: '',
+      review_id: ''
     }
+  }
 
   componentDidMount(){
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
@@ -28,12 +28,13 @@ class Camera extends Component{
     this.unsubscribe()
   }
 
+  // load and store the IDs of the review and location that the photo will be added to
   getParam(){
     const reviewInfo = this.props.route.params.reviewData;
 
     this.setState({
-        review_id: reviewInfo.review.review_id,
-        location_id: reviewInfo.location.location_id
+      review_id: reviewInfo.review.review_id,
+      location_id: reviewInfo.location.location_id
     })
   }
 
@@ -42,9 +43,7 @@ class Camera extends Component{
     const locationId = this.state.location_id.toString();
     const reviewId = this.state.review_id.toString();
 
-    console.log("Location: ", locationId)
-    console.log("Review: ", reviewId)
-
+    // set the camera settings and take the photo using those settings
     if(this.camera){
       const options = {quality: 0.5, base64: true}
       const data = await this.camera.takePictureAsync(options);
@@ -88,6 +87,7 @@ class Camera extends Component{
     const navigator = this.props.navigation
     return (
       <View style={{flex:1}}>
+        {/* Load and display camera on the screen */}
         <RNCamera
           ref={ref => {
             this.camera = ref;
@@ -101,21 +101,20 @@ class Camera extends Component{
         />
         <Card style={styles.buttons}>
             <CardItem style={styles.button}>
-                
                 <Button info onPress={() => navigator.navigate('Profile')}>
-                    <Icon
-                        style={styles.backButton}
-                        name='chevron-left'
-                        color='#0033cc'
-                        size={30}
-                    />
-                    <Text>Back</Text>
+                  <Icon
+                    style={styles.backButton}
+                    name='chevron-left'
+                    color='#0033cc'
+                    size={30}
+                  />
+                  <Text>Back</Text>
                 </Button>
             </CardItem>
             <CardItem style={styles.button}>
-                <Button primary onPress={() => this.takePicture()}>
-                    <Text>Take Photo</Text>
-                </Button>
+              <Button primary onPress={() => this.takePicture()}>
+                <Text>Take Photo</Text>
+              </Button>
             </CardItem>
         </Card>
       </View>
@@ -125,20 +124,20 @@ class Camera extends Component{
 }
 
 const styles = StyleSheet.create({
-    buttons: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignSelf: 'center'
-    },
-    
-    button: {
-        margin: 7,
-        backgroundColor: 'transparent'
-    },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignSelf: 'center'
+  },
+  
+  button: {
+    margin: 7,
+    backgroundColor: 'transparent'
+  },
 
-    backButton: {
-        margin: 7
-    }
+  backButton: {
+    margin: 7
+  }
 });
 
 Camera.propTypes = {

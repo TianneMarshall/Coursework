@@ -7,7 +7,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Homescreen from './components/homescreen';
 import ProfileScreen from './components/profilescreen';
 import SignUpScreen from './components/signupscreen';
-import Location from './components/location';
 import LoginScreen from './components/loginscreen';
 import LogoutScreen from './components/logoutscreen';
 import LocationScreen from './components/locationscreen';
@@ -29,7 +28,8 @@ function UserNav() {
       <UserStack.Screen name="Edit User" component={EditProfileScreen} />
       <UserStack.Screen name="MyReviews" component={MyReviews} />
       <UserStack.Screen name="Edit Review" component={EditReviewScreen} />
-      <UserStack.Screen name="LocationScreen" component={LocationScreen} />
+      <UserStack.Screen name="Camera" component={Camera}/>
+      <UserStack.Screen name="Location Info" component={LocationScreen} />
     </UserStack.Navigator>
   );
 }
@@ -39,8 +39,8 @@ function HomeNav() {
     <Stack.Navigator>
       <Stack.Screen name="Home" options={{headerShown: false}} component={Homescreen} />
       <Stack.Screen name="MyLocation" component={MyLocation}/>
-      <Stack.Screen name="LocationScreen" component={LocationScreen} />
-      <Stack.Screen name="WriteReviewScreen" component={WriteReviewScreen} />
+      <Stack.Screen name="Location Info" component={LocationScreen} />
+      <Stack.Screen name="Write Review" component={WriteReviewScreen} />
     </Stack.Navigator>
   );
 }
@@ -56,13 +56,11 @@ function LoginNav() {
 
 function App () {
   return (
-
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Sign In" component={LoginNav} />
         <Tab.Screen name="Home" component={HomeNav} />
         <Tab.Screen name="Profile" component={UserNav} />
-        <Tab.Screen name="Camera" component={Camera}/>
         <Tab.Screen name="Sign out" component={LogoutScreen} />
       </Tab.Navigator>
     </NavigationContainer>
