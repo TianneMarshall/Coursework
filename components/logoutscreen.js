@@ -1,5 +1,7 @@
-import { Component } from 'react';
+import  React, { Component } from 'react';
+import { View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Text, Card, CardItem, Button, Header, Item } from 'native-base'
 import PropTypes from 'prop-types';
 import Toast from 'react-native-simple-toast';
 
@@ -37,13 +39,106 @@ class LogoutScreen extends Component{
     });
   }
 
+  reset = async() => {
+    const token = await AsyncStorage.getItem('@session_token');
+
+    return fetch("http://10.0.2.2:3333/api/reset",
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': token
+      }
+    })
+    .then((response) => {
+      if(response.status === 200){
+        Toast.show("Successfully reset database")
+      }
+      else if(response.status === 500){
+        throw Error("Error - try again later")
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+    });
+  }
+
+  resample = async() => {
+    const token = await AsyncStorage.getItem('@session_token');
+
+    return fetch("http://10.0.2.2:3333/api/resample",
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': token
+      }
+    })
+    .then((response) => {
+      if(response.status === 201){
+        Toast.show("Successfully reloaded sample set")
+      }
+      else if(response.status === 500){
+        throw Error("Error - try again later")
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+    });
+  }
+
   render() {
-    this.signout()
+    
     return(
-      null
+      <View style={{flex: 1}}>
+        <Header transparent style={styles.title}>
+          <Item transparent>
+            <Text style={styles.title}> Settings </Text>
+          </Item>
+        </Header>
+      <Card style={styles.screen}>
+        <CardItem>
+          <Button rounded info onPress={() => this.signout()}>
+            <Text> Log out</Text>
+          </Button>
+        </CardItem>
+        <CardItem>
+          <Button rounded danger onPress={() => this.reset()}>
+            <Text> Reset Database </Text>
+          </Button>
+        </CardItem>
+        <CardItem>
+          <Button rounded danger onPress={() => this.resample()}>
+            <Text> Resample Database </Text>
+          </Button>
+        </CardItem>
+      </Card>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+
+  screen: {
+    flex: 1,
+    margin: 8,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  button: {
+    alignSelf: 'center',
+    margin: 10
+  },
+  card: {
+    borderBottomWidth: 2,
+    borderColor: '#bf80ff',
+  },
+  title: {
+    fontSize: 25,
+    alignSelf: 'center'
+  }
+})
 
 LogoutScreen.propTypes = {
   navigation: PropTypes.shape({
