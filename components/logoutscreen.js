@@ -40,22 +40,23 @@ class LogoutScreen extends Component{
   }
 
   reset = async() => {
-    const token = await AsyncStorage.getItem('@session_token');
 
-    return fetch("http://10.0.2.2:3333/api/reset",
+    return fetch("http://10.0.2.2:3333/api/1.0.0/reset",
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'X-Authorization': token
+        'Content-Type': 'application/json'
       }
     })
     .then((response) => {
       if(response.status === 200){
-        Toast.show("Successfully reset database")
+        Toast.show("Successfully reset database", Toast.LONG)
       }
       else if(response.status === 500){
-        throw Error("Error - try again later")
+        console.error("Error - try again later")
+      }
+      else{
+        console.error("Failed")
       }
     })
     .catch((error) => {
@@ -64,22 +65,20 @@ class LogoutScreen extends Component{
   }
 
   resample = async() => {
-    const token = await AsyncStorage.getItem('@session_token');
 
-    return fetch("http://10.0.2.2:3333/api/resample",
+    return fetch("http://10.0.2.2:3333/api/1.0.0/resample",
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'X-Authorization': token
+        'Content-Type': 'application/json'
       }
     })
     .then((response) => {
       if(response.status === 201){
-        Toast.show("Successfully reloaded sample set")
+        Toast.show("Successfully reloaded sample set", Toast.LONG)
       }
       else if(response.status === 500){
-        throw Error("Error - try again later")
+        console.error("Error - try again later")
       }
     })
     .catch((error) => {
