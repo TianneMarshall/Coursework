@@ -1,5 +1,5 @@
 # Coursework
-coffida server for coffee review app
+Coffee review app for coffida server
 
 My git repository is available in the master branch at:
 
